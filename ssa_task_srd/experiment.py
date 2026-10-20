@@ -183,9 +183,11 @@ def run(config, root, out, task_driven=True):
     for name,inputs in variants.items():
         print(f'Evaluating independent ridge forecaster: {name}',flush=True)
         model=Ridge(alpha=config['ridge_alpha'],solver=config.get('ridge_solver','lsqr'))
-        model.fit(inputs['train'],windows['train']['y'])
+        readout_inputs=({k:np.asarray(v,dtype=np.float64) for k,v in inputs.items()}
+            if config.get('ridge_solver')=='cholesky' else inputs)
+        model.fit(readout_inputs['train'],windows['train']['y'])
         for split in config.get('evaluation_splits',['val','test']):
-            prediction=model.predict(inputs[split])
+            prediction=model.predict(readout_inputs[split])
             score=metrics(prediction,windows[split]['y'],std)
             rows.append({'method':name,'split':split,'forecast_mae_original':score['mae'],'forecast_rmse_original':score['rmse'],
                 **history_metrics(inputs[split],windows[split]['reference'],windows[split]['outlier_mask'])})
