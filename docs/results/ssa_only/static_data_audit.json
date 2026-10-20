@@ -1,0 +1,299 @@
+{
+  "source": "UCI Tetouan original CSV, no splicing",
+  "url": "https://doi.org/10.24432/C5B034",
+  "license": "CC BY 4.0",
+  "sha256": "ca8b2f30cf07dd872cb7f2aa45dac110ee38dbe5fc5910a6ff4bcc530dae3a40",
+  "rows": 52416,
+  "start": "2017-01-01 00:00:00",
+  "end": "2017-12-30 23:50:00",
+  "interval_minutes": 10,
+  "duplicates": 0,
+  "missing_values": 0,
+  "reference": "Original observations, not guaranteed artifact-free ground truth",
+  "boundaries": {
+    "train_end": 36691,
+    "val_end": 44553,
+    "test_end": 52416
+  },
+  "scale_mean": 32956.889154861135,
+  "scale_std": 7255.495984061855,
+  "scaler_fit_range": [
+    0,
+    36691
+  ],
+  "window_counts": {
+    "train": 36,
+    "val": 12
+  },
+  "sampled_origins": {
+    "train": [
+      432,
+      1440,
+      2448,
+      3456,
+      4464,
+      5472,
+      6480,
+      7632,
+      8640,
+      9648,
+      10656,
+      11664,
+      12672,
+      13680,
+      14832,
+      15840,
+      16848,
+      17856,
+      18864,
+      19872,
+      20880,
+      22032,
+      23040,
+      24048,
+      25056,
+      26064,
+      27072,
+      28080,
+      29232,
+      30240,
+      31248,
+      32256,
+      33264,
+      34272,
+      35280,
+      36432
+    ],
+    "val": [
+      36720,
+      37296,
+      38016,
+      38736,
+      39456,
+      40176,
+      40752,
+      41472,
+      42192,
+      42912,
+      43632,
+      44352
+    ]
+  },
+  "target_ranges": {
+    "train": [
+      [
+        432,
+        576
+      ],
+      [
+        1440,
+        1584
+      ],
+      [
+        2448,
+        2592
+      ],
+      [
+        3456,
+        3600
+      ],
+      [
+        4464,
+        4608
+      ],
+      [
+        5472,
+        5616
+      ],
+      [
+        6480,
+        6624
+      ],
+      [
+        7632,
+        7776
+      ],
+      [
+        8640,
+        8784
+      ],
+      [
+        9648,
+        9792
+      ],
+      [
+        10656,
+        10800
+      ],
+      [
+        11664,
+        11808
+      ],
+      [
+        12672,
+        12816
+      ],
+      [
+        13680,
+        13824
+      ],
+      [
+        14832,
+        14976
+      ],
+      [
+        15840,
+        15984
+      ],
+      [
+        16848,
+        16992
+      ],
+      [
+        17856,
+        18000
+      ],
+      [
+        18864,
+        19008
+      ],
+      [
+        19872,
+        20016
+      ],
+      [
+        20880,
+        21024
+      ],
+      [
+        22032,
+        22176
+      ],
+      [
+        23040,
+        23184
+      ],
+      [
+        24048,
+        24192
+      ],
+      [
+        25056,
+        25200
+      ],
+      [
+        26064,
+        26208
+      ],
+      [
+        27072,
+        27216
+      ],
+      [
+        28080,
+        28224
+      ],
+      [
+        29232,
+        29376
+      ],
+      [
+        30240,
+        30384
+      ],
+      [
+        31248,
+        31392
+      ],
+      [
+        32256,
+        32400
+      ],
+      [
+        33264,
+        33408
+      ],
+      [
+        34272,
+        34416
+      ],
+      [
+        35280,
+        35424
+      ],
+      [
+        36432,
+        36576
+      ]
+    ],
+    "val": [
+      [
+        36720,
+        36864
+      ],
+      [
+        37296,
+        37440
+      ],
+      [
+        38016,
+        38160
+      ],
+      [
+        38736,
+        38880
+      ],
+      [
+        39456,
+        39600
+      ],
+      [
+        40176,
+        40320
+      ],
+      [
+        40752,
+        40896
+      ],
+      [
+        41472,
+        41616
+      ],
+      [
+        42192,
+        42336
+      ],
+      [
+        42912,
+        43056
+      ],
+      [
+        43632,
+        43776
+      ],
+      [
+        44352,
+        44496
+      ]
+    ]
+  },
+  "artificial_corruption_applied": false,
+  "injection_function_called": false,
+  "repair_enabled": false,
+  "test_windows_constructed": false,
+  "controls": {
+    "train_all_components_identity_max_input_difference": 0.0,
+    "train_ssa_rank_144_max_input_difference": 1.2101430968414206e-14,
+    "val_all_components_identity_max_input_difference": 0.0,
+    "val_ssa_rank_144_max_input_difference": 8.992806499463768e-15,
+    "all_components_identity_max_prediction_difference_original": 0.0,
+    "ssa_rank_144_max_prediction_difference_original": 1.6432646141024892e-10
+  },
+  "ssa_cache": {
+    "hit": true,
+    "seconds": 0.09622060000037891,
+    "key": "51228fb1bd96d16190b2",
+    "bytes": 22957681
+  },
+  "meaning": "Input-change RMS is modification magnitude, not denoising error; original observations are not clean truth"
+}

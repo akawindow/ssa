@@ -1,0 +1,136 @@
+{
+  "status": "All checks passed: original inputs, no injection/repair/test, paired initialization, stable identity readout",
+  "readout": "Uniform float64 Ridge alpha=1, solver=cholesky; neural histories/weights unchanged",
+  "evaluation_code_commit": "2fc9850328a90f61b778364d4e51be94db4ee972",
+  "protocol": {
+    "base_config": "configs/ssa_only.json",
+    "input_condition": "reference",
+    "artificial_corruption": false,
+    "repair_backend": "none",
+    "training_seeds": [
+      42,
+      43,
+      44
+    ],
+    "training_modes": [
+      "paired_frozen",
+      "collaborative"
+    ],
+    "static_ranks": [
+      1,
+      2,
+      4,
+      6,
+      8,
+      12,
+      24,
+      48,
+      96,
+      144
+    ],
+    "full_decomposition_rank": 144,
+    "ablation_rank": 6,
+    "ablation": "One group removed at a time from six elementary components plus exact residual; keep all other groups",
+    "positive_controls": [
+      "All components including exact residual reproduce input",
+      "Full rank 144 reproduces input up to numerical error",
+      "Drop residual after six equals fixed rank six"
+    ],
+    "evaluation_splits": [
+      "val"
+    ],
+    "ridge_solver": "cholesky",
+    "numerical_correction": "After the initial full-rank identity control failed under default LSQR tolerance, all SSA-only readouts use direct Cholesky; retain initial logs and audit both solvers. Neural parameters are unchanged.",
+    "scope": "SSA input reconstruction before independent Ridge, not SSA recurrent forecasting",
+    "selection_rule": "Report every prespecified rank and deletion; exploratory validation minimum is not a final tuned method",
+    "no_clean_ground_truth": "Report input-change RMS as modification magnitude, not denoising accuracy"
+  },
+  "model_runs": [
+    {
+      "training_mode": "paired_frozen",
+      "training_seed": 42,
+      "training_code_commit": "d4fff3adb3c8f3c380b8a6d05ffe1aaaef5dddcb",
+      "pretrained_proxy_sha256": "d540e0415f408dcab3d08d3ebe24fcb09084b00745b7e66b176c5c1d122b9e5e",
+      "initial_head_sha256": "3a4ec7791a3ec33d84008a7583291924644600435d844c41bb526aa7dbb07344",
+      "batch_order_sha256": "db3e257f0738eeb184fcfdb075293e7f68096ccdb2c506fd4d78764a9710dd78",
+      "neural_weights_unchanged_by_readout_correction": true,
+      "matches_previous_reference_neural_training": true,
+      "no_added_corruption": true,
+      "no_repair": true,
+      "test_evaluation": false,
+      "learning_seconds": 4.2010795999995025
+    },
+    {
+      "training_mode": "collaborative",
+      "training_seed": 42,
+      "training_code_commit": "d4fff3adb3c8f3c380b8a6d05ffe1aaaef5dddcb",
+      "pretrained_proxy_sha256": "d540e0415f408dcab3d08d3ebe24fcb09084b00745b7e66b176c5c1d122b9e5e",
+      "initial_head_sha256": "3a4ec7791a3ec33d84008a7583291924644600435d844c41bb526aa7dbb07344",
+      "batch_order_sha256": "db3e257f0738eeb184fcfdb075293e7f68096ccdb2c506fd4d78764a9710dd78",
+      "neural_weights_unchanged_by_readout_correction": true,
+      "matches_previous_reference_neural_training": true,
+      "no_added_corruption": true,
+      "no_repair": true,
+      "test_evaluation": false,
+      "learning_seconds": 4.661452399999689
+    },
+    {
+      "training_mode": "paired_frozen",
+      "training_seed": 43,
+      "training_code_commit": "d4fff3adb3c8f3c380b8a6d05ffe1aaaef5dddcb",
+      "pretrained_proxy_sha256": "2c686b10f7dae796f3e58a8082bf74f4176e9367dc5350bd0578c5dc4c68ca23",
+      "initial_head_sha256": "3a4ec7791a3ec33d84008a7583291924644600435d844c41bb526aa7dbb07344",
+      "batch_order_sha256": "9dc677765884b44ad6ac68c907380358db294e163b586df29aab1463819ff1c2",
+      "neural_weights_unchanged_by_readout_correction": true,
+      "matches_previous_reference_neural_training": true,
+      "no_added_corruption": true,
+      "no_repair": true,
+      "test_evaluation": false,
+      "learning_seconds": 4.272176099999342
+    },
+    {
+      "training_mode": "collaborative",
+      "training_seed": 43,
+      "training_code_commit": "d4fff3adb3c8f3c380b8a6d05ffe1aaaef5dddcb",
+      "pretrained_proxy_sha256": "2c686b10f7dae796f3e58a8082bf74f4176e9367dc5350bd0578c5dc4c68ca23",
+      "initial_head_sha256": "3a4ec7791a3ec33d84008a7583291924644600435d844c41bb526aa7dbb07344",
+      "batch_order_sha256": "9dc677765884b44ad6ac68c907380358db294e163b586df29aab1463819ff1c2",
+      "neural_weights_unchanged_by_readout_correction": true,
+      "matches_previous_reference_neural_training": true,
+      "no_added_corruption": true,
+      "no_repair": true,
+      "test_evaluation": false,
+      "learning_seconds": 4.836495900002774
+    },
+    {
+      "training_mode": "paired_frozen",
+      "training_seed": 44,
+      "training_code_commit": "d4fff3adb3c8f3c380b8a6d05ffe1aaaef5dddcb",
+      "pretrained_proxy_sha256": "82013575d7756adeb8f8d268db492a73985c065d00d1661a186b4b34b1c31c2e",
+      "initial_head_sha256": "3a4ec7791a3ec33d84008a7583291924644600435d844c41bb526aa7dbb07344",
+      "batch_order_sha256": "16defc27f11ede9ac191b964aa2bbf8b0464c89152e4498f9ed912cb7f8d8f24",
+      "neural_weights_unchanged_by_readout_correction": true,
+      "matches_previous_reference_neural_training": true,
+      "no_added_corruption": true,
+      "no_repair": true,
+      "test_evaluation": false,
+      "learning_seconds": 4.646102700000483
+    },
+    {
+      "training_mode": "collaborative",
+      "training_seed": 44,
+      "training_code_commit": "d4fff3adb3c8f3c380b8a6d05ffe1aaaef5dddcb",
+      "pretrained_proxy_sha256": "82013575d7756adeb8f8d268db492a73985c065d00d1661a186b4b34b1c31c2e",
+      "initial_head_sha256": "3a4ec7791a3ec33d84008a7583291924644600435d844c41bb526aa7dbb07344",
+      "batch_order_sha256": "16defc27f11ede9ac191b964aa2bbf8b0464c89152e4498f9ed912cb7f8d8f24",
+      "neural_weights_unchanged_by_readout_correction": true,
+      "matches_previous_reference_neural_training": true,
+      "no_added_corruption": true,
+      "no_repair": true,
+      "test_evaluation": false,
+      "learning_seconds": 4.9523342000029515
+    }
+  ],
+  "initial_failed_diagnostic_retained": "runs\\ssa_only_initial\\static_diagnostics",
+  "scope": "Validation exploration; not clean-ground-truth denoising evaluation or confirmed tuned rank"
+}
