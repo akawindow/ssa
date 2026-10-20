@@ -4,6 +4,8 @@
 
 已完成的首次运行、数值、适用范围和下一步见 [初步实验记录](docs/INITIAL_RESULTS.md)。
 
+第二轮已补齐无额外污染对照、TASK 式共享特征与匹配随机特征对照，完成 18 次验证集运行及训练前后诊断。结果与下一步见 [第二轮实验记录](docs/ROUND02_RESULTS.md)；逐项记录见 [实验日志](docs/EXPERIMENT_LOG.md)。
+
 ## 当前实现
 
 - 原始 Tetouan 城市电力数据的读取、时间完整性检查和按时间 70%/15%/15% 划分。
@@ -24,6 +26,7 @@ Windows PowerShell，进入工程后：
 ./scripts/run.ps1 -Mode tests
 ./scripts/run.ps1 -Mode smoke
 ./scripts/run.ps1 -Mode pilot
+./scripts/run.ps1 -Mode round02
 ```
 
 `smoke` 明确使用合成周期序列；`pilot` 使用真实 Tetouan CSV，数据缺失会报错，不会自动改用合成数据。初版最多取 36/12/12 个训练/验证/测试窗口，均匀分布在各自时间段，仅用于检查工程。
@@ -68,7 +71,20 @@ python scripts/fetch_resources.py
 
 `data/` 与 `runs/` 不进入 Git，下载内容附 SHA256 清单。先用本地 Git 即可；目前不需要 GitHub。后续提供空仓库地址、完成官方登录后再配置远程，禁止把密码、访问令牌或原始大数据放进提交。
 
-下一步：验证本工程可重复运行、校准原版 SRD，实现无污染条件与多种子评价，再决定是否扩大规模。
+原计划中的无污染条件与多训练种子评价已在第二轮补充；原版 SRD 一致性校准仍待完成。
+
+第二轮补充：`round02` 按 `configs/round02_protocol.json` 运行，只构造训练/验证窗口；污染种子固定为 42，训练种子为 42/43/44。原卷积选择器有 161 个可训练参数；两个特征选择头均有 33 个可训练参数，分别使用预训练/随机冻结特征。共享特征选择器还包含冻结的特征提取权重，不能把 33 当成整个插件的总参数或计算成本。
+
+当前判断：修复原型在人工污染条件下有用，但会损伤无额外污染输入；共享特征组合仅有很小的验证收益，尚未证明 SSA 插件的稳定增量。下一步固定现有结构比较权重初始化，先不同时引入交替训练。
+
+结果汇总可用同一个 Python 环境运行（输出目录必须为新目录）：
+
+```powershell
+python scripts/summarize_round02.py --run runs/round02_initial --out docs/results/round02_recheck
+python scripts/diagnose_initial_heads.py --run runs/round02_initial --out docs/results/round02_initial_heads_recheck
+```
+
+第二条是看到权重记录后补做的诊断：代理已经预训练，分别评价权重头训练前后；不进行新的神经网络训练，不评价测试集。
 
 ## 后续接入 GitHub
 

@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('smoke','pilot','tests')][string]$Mode='smoke',
+    [ValidateSet('smoke','pilot','tests','round02')][string]$Mode='smoke',
     [string]$Python='',
     [string]$Out='',
     [switch]$FixedOnly
@@ -16,6 +16,12 @@ if (-not $Python) {
 Push-Location -LiteralPath $experimentRoot
 try {
     if ($Mode -eq 'tests') { & $Python -X utf8 -m unittest discover -s tests -v }
+    elseif ($Mode -eq 'round02') {
+        if ($FixedOnly) { throw 'round02 requires the learning stage' }
+        $roundArgs=@('-X','utf8','scripts/run_round02.py')
+        if ($Out) { $roundArgs+=@('--out',$Out) }
+        & $Python @roundArgs
+    }
     else {
         if (-not $Out) { $Out='runs/'+$Mode+'_'+(Get-Date -Format 'yyyyMMdd_HHmmss') }
         $experimentArgs=@('-X','utf8','-m','ssa_task_srd','--config',"configs/$Mode.json",'--out',$Out)

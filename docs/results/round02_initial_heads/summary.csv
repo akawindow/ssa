@@ -1,0 +1,17 @@
+condition,mode,method,state,mean,std
+mixed,proxy_features,task_ssa,initial,2466.231051186089,2.3918161164371576
+mixed,proxy_features,task_ssa,trained,2465.821027592667,2.3036664944510066
+mixed,proxy_features,task_ssa_srd_prototype,initial,2162.5475269086687,17.656924749051235
+mixed,proxy_features,task_ssa_srd_prototype,trained,2150.731100430041,5.045434121782861
+mixed,random_features,task_ssa,initial,2470.9007347769234,19.777494171277
+mixed,random_features,task_ssa,trained,2463.664005446725,12.82398752517698
+mixed,random_features,task_ssa_srd_prototype,initial,2178.424238753603,30.683584986008665
+mixed,random_features,task_ssa_srd_prototype,trained,2175.3378331434737,30.242663884047982
+reference,proxy_features,task_ssa,initial,2133.224793344072,40.14450085141635
+reference,proxy_features,task_ssa,trained,2129.736352045836,39.105538057135185
+reference,proxy_features,task_ssa_srd_prototype,initial,2275.674645612908,12.538857485171972
+reference,proxy_features,task_ssa_srd_prototype,trained,2264.8423230112708,3.6587031141955775
+reference,random_features,task_ssa,initial,2126.7951609592033,34.457731378589465
+reference,random_features,task_ssa,trained,2112.659269854677,12.040038293324898
+reference,random_features,task_ssa_srd_prototype,initial,2273.8651116957226,11.342713405326066
+reference,random_features,task_ssa_srd_prototype,trained,2295.1727106909616,45.26603731747902

@@ -1,0 +1,79 @@
+{
+  "status": "Post-hoc diagnostic, not part of the locked primary matrix",
+  "test_evaluated": false,
+  "new_neural_training": false,
+  "checks": [
+    {
+      "directory": "reference_proxy_features_seed42",
+      "initial_head_and_weight_summary_match": true,
+      "trained_weights_match": true,
+      "max_prediction_difference_z": 0.0
+    },
+    {
+      "directory": "reference_random_features_seed42",
+      "initial_head_and_weight_summary_match": true,
+      "trained_weights_match": true,
+      "max_prediction_difference_z": 0.0
+    },
+    {
+      "directory": "reference_proxy_features_seed43",
+      "initial_head_and_weight_summary_match": true,
+      "trained_weights_match": true,
+      "max_prediction_difference_z": 0.0
+    },
+    {
+      "directory": "reference_random_features_seed43",
+      "initial_head_and_weight_summary_match": true,
+      "trained_weights_match": true,
+      "max_prediction_difference_z": 0.0
+    },
+    {
+      "directory": "reference_proxy_features_seed44",
+      "initial_head_and_weight_summary_match": true,
+      "trained_weights_match": true,
+      "max_prediction_difference_z": 0.0
+    },
+    {
+      "directory": "reference_random_features_seed44",
+      "initial_head_and_weight_summary_match": true,
+      "trained_weights_match": true,
+      "max_prediction_difference_z": 0.0
+    },
+    {
+      "directory": "mixed_proxy_features_seed42",
+      "initial_head_and_weight_summary_match": true,
+      "trained_weights_match": true,
+      "max_prediction_difference_z": 0.0
+    },
+    {
+      "directory": "mixed_random_features_seed42",
+      "initial_head_and_weight_summary_match": true,
+      "trained_weights_match": true,
+      "max_prediction_difference_z": 0.0
+    },
+    {
+      "directory": "mixed_proxy_features_seed43",
+      "initial_head_and_weight_summary_match": true,
+      "trained_weights_match": true,
+      "max_prediction_difference_z": 0.0
+    },
+    {
+      "directory": "mixed_random_features_seed43",
+      "initial_head_and_weight_summary_match": true,
+      "trained_weights_match": true,
+      "max_prediction_difference_z": 0.0
+    },
+    {
+      "directory": "mixed_proxy_features_seed44",
+      "initial_head_and_weight_summary_match": true,
+      "trained_weights_match": true,
+      "max_prediction_difference_z": 0.0
+    },
+    {
+      "directory": "mixed_random_features_seed44",
+      "initial_head_and_weight_summary_match": true,
+      "trained_weights_match": true,
+      "max_prediction_difference_z": 0.0
+    }
+  ]
+}

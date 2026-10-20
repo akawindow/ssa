@@ -1,0 +1,9 @@
+condition,mode,method,mean,std
+mixed,proxy_features,task_ssa,-0.4100235934220109,0.08821499800515659
+mixed,proxy_features,task_ssa_srd_prototype,-11.816426478627818,19.816395742841888
+mixed,random_features,task_ssa,-7.236729330198007,9.434632525656438
+mixed,random_features,task_ssa_srd_prototype,-3.0864056101292285,0.502595565301194
+reference,proxy_features,task_ssa,-3.4884412982361632,2.9521602360158754
+reference,proxy_features,task_ssa_srd_prototype,-10.832322601637165,9.81530412013092
+reference,random_features,task_ssa,-14.135891104526308,23.811955286718295
+reference,random_features,task_ssa_srd_prototype,21.307598995238852,33.97189448358408
