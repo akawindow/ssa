@@ -38,3 +38,9 @@ Power Consumption of Tetouan City：Salam, A. & El Hibaoui, A. (2018), UCI。
 第七轮重新核对本机TASK实现，新增完整SSA成分、零偏置/max-norm选择头及等预算原始代理、常数缩放和昨日持久性对照。原始工程只读，文件哈希记录在执行元数据中；新配置不改变旧默认值。TASK式头仅迁移选择头的两项设置，并未采用整个EEGNet。当前预测改善未超过简单缩放，不能称为已经证明的去噪效果。见 `docs/TASK_ALIGNMENT_AUDIT.md` 和 `docs/TASK_ALIGNMENT_RESULTS.md`。
 
 第九轮明确主要问题为联合MLP是否超过同初始化、同代理更新预算的原始MLP，独立Ridge仅作次级迁移检验。新的三角色时间划分将本轮检查点选择与评价分开，未使用测试段，未改动D盘TASK源码。本轮没有运行Ridge，仍未观察到稳定的联合MLP增量；长期约定与边界见 `AGENTS.md`、`docs/RESEARCH_DECISIONS.md` 和 `docs/MLP_PRIMARY_RESULTS.md`。
+
+## 新增FordA分类分支
+
+2026-10-20用户授权。数据定义来源 https://timeseriesclassification.com/description.php?Dataset=FordA ，训练文件镜像为官方Keras示例 https://keras.io/examples/timeseries/timeseries_classification_from_scratch/ 所链接的 https://raw.githubusercontent.com/hfawaz/cd-diagram/master/FordA/FordA_TRAIN.tsv 。SHA256及完整下载来源写入锁定协议和数据审计。只下载官方TRAIN，本工程内部再分拟合/选择/评价，官方TEST不下载或读取，数据文件不提交仓库。
+
+分类器、CE反馈和共享特征的交替训练独立实现，迁移TASK思路；本轮没有复现EEGNet或Keras示例较大FCN，没有再分发作者源码或权重。结果仅为原始单变量分类探索，无人工污染、无SRD、无干净参考，不能声称物理去噪成功或新颖性已经确认。详见 `docs/CLASSIFICATION_RESULTS.md`。

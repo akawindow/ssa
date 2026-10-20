@@ -1,0 +1,10 @@
+seed,role,closest_per_sample_scale_mean,closest_scale_min,closest_scale_max,shape_residual_rms_over_raw_rms,scope
+42,fit,0.5896183143500624,0.5448115088817499,0.6066675358769819,0.0064604936577407355,Posthoc geometry only; no future/class labels used; not a denoising error or new predictor score
+42,selection,0.5897672399475604,0.5704837162050103,0.6041804113141898,0.006276176656974354,Posthoc geometry only; no future/class labels used; not a denoising error or new predictor score
+42,assessment,0.5896845215756675,0.5566102665206458,0.6042284725893918,0.00625962381656515,Posthoc geometry only; no future/class labels used; not a denoising error or new predictor score
+43,fit,0.6100876893856564,0.5759166559943873,0.6284742155365998,0.0073115344375883785,Posthoc geometry only; no future/class labels used; not a denoising error or new predictor score
+43,selection,0.6107019513035309,0.5766413683227601,0.6275315728444708,0.006844172773925631,Posthoc geometry only; no future/class labels used; not a denoising error or new predictor score
+43,assessment,0.6103120154138141,0.5794343103337699,0.6273656689996892,0.006816577277399976,Posthoc geometry only; no future/class labels used; not a denoising error or new predictor score
+44,fit,0.5648105207508758,0.5331345590540788,0.5773837520051263,0.007506793363480148,Posthoc geometry only; no future/class labels used; not a denoising error or new predictor score
+44,selection,0.5652197697874469,0.5331623754930785,0.5773400386817124,0.007135803615956488,Posthoc geometry only; no future/class labels used; not a denoising error or new predictor score
+44,assessment,0.5651009947056881,0.5334577507944488,0.5756135625768497,0.00687402952768752,Posthoc geometry only; no future/class labels used; not a denoising error or new predictor score

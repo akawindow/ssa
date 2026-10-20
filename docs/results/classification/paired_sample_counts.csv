@@ -1,0 +1,4 @@
+seed,n,raw_correct,task_correct,raw_wrong_task_correct,raw_correct_task_wrong,net_extra_correct
+42,541,477,476,5,6,-1
+43,541,480,472,7,15,-8
+44,541,486,482,3,7,-4
