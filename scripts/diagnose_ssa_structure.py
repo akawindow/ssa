@@ -113,6 +113,13 @@ def main():
         median_centered_rms_z=('centered_rms_z', 'median'),
         median_daily_harmonic_power_fraction=('daily_harmonic_power_fraction', 'median'),
         median_daily_amplitude_z=('daily_amplitude_z', 'median'))
+    # Rank labels may change meaning between histories. A median period can lie
+    # between observed peaks, so also retain the actual peak distribution/mode.
+    peak_distribution = frame.groupby(['component', 'peak_period_hours'], sort=False).size().rename('window_count').reset_index()
+    peak_distribution.to_csv(out/'peak_period_distribution.csv', index=False)
+    modes = peak_distribution.sort_values('window_count', ascending=False).drop_duplicates('component').set_index('component')
+    summary['modal_peak_period_hours'] = modes['peak_period_hours']
+    summary['modal_peak_window_count'] = modes['window_count']
     summary.to_csv(out/'component_summary.csv')
     pair_summary = pairs.groupby(['left', 'right'], sort=False).agg(
         candidate_windows=('candidate_pair', 'sum'), median_abs_wcor=('abs_wcor', 'median'),
@@ -143,6 +150,9 @@ def main():
         'windows_with_any_candidate_crossing_cutoff': int((cuts.candidate_cross_cutoff_count > 0).sum()),
         'windows_with_c6_c7_candidate': int(cuts.c6_c7_candidate.sum()),
         'median_c6_c7_abs_wcor': float(cuts.c6_c7_abs_wcor.median()),
+        'c6_c7_candidate_peak_period_counts': frame[(frame.component == 'C6') & frame.window.isin(
+            pairs[(pairs.left == 'C6') & (pairs.right == 'C7') & pairs.candidate_pair].window)
+            ].peak_period_hours.value_counts().to_dict(),
         'leading_candidate_pairs': pair_summary.sort_values(['candidate_windows', 'median_abs_wcor'], ascending=False).head(12).to_dict('records')}
     for name, value in [('protocol', protocol), ('config', config), ('data_audit', audit), ('summary', result)]:
         (out/f'{name}.json').write_text(json.dumps(value, indent=2, allow_nan=False), encoding='utf-8')
