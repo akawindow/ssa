@@ -44,6 +44,8 @@ def validate_config(config):
         raise ValueError('evaluation_splits must be [val] or [val, test]')
     if config.get('selector_mode','raw_conv') not in ['raw_conv','proxy_features','random_features']:
         raise ValueError('Invalid selector mode')
+    if config.get('repair_backend','prototype') not in ['prototype','java']:
+        raise ValueError('Invalid repair backend; select prototype or java explicitly')
 
 
 def cached_components(root, windows, config):
@@ -128,14 +130,31 @@ def run(config, root, out, task_driven=True):
     (out/'data_audit.json').write_text(json.dumps(audit,ensure_ascii=False,indent=2),encoding='utf-8')
     components,cache=cached_components(root,windows,config)
     timings={'ssa':cache}
+    backend=config.get('repair_backend','prototype')
+    java_srd=None
+    if backend=='java':
+        from .java_srd import JavaSRD
+        java_srd=JavaSRD(root)
+        if not java_srd.provenance()['adapter_verified_against_author_smoke']:
+            raise RuntimeError('Java adapter is not verified against author smoke; run scripts/verify_java_srd.py first')
+    repair_name='srd_java' if java_srd else 'srd_prototype'
     variants={'raw':{k:v['x'] for k,v in windows.items()},
         'ssa':{k:np.array([ssa.ordinary(c) for c in v]) for k,v in components.items()}}
     def clean_variant(name,source):
         start=time.perf_counter()
-        variants[name]={k:np.array([repair(x,config['period'],config['srd_k'],config['srd_iterations']) for x in a]) for k,a in source.items()}
-        timings[name]={'seconds':time.perf_counter()-start}
-    clean_variant('srd_prototype',variants['raw'])
-    clean_variant('ssa_srd_prototype',variants['ssa'])
+        batches={}
+        if java_srd:
+            variants[name]={}
+            for split,a in source.items():
+                repaired,audit=java_srd.repair_batch(a,config['period'],config['srd_k'],config['srd_iterations'],
+                    artifact_dir=out/'repair_io'/name/split)
+                variants[name][split]=repaired;batches[split]=audit
+        else:
+            variants[name]={k:np.array([repair(x,config['period'],config['srd_k'],config['srd_iterations']) for x in a]) for k,a in source.items()}
+        timings[name]={'seconds':time.perf_counter()-start,'java_batches':batches}
+        np.savez_compressed(out/f'histories_{name}.npz',**variants[name])
+    clean_variant(repair_name,variants['raw'])
+    clean_variant('ssa_'+repair_name,variants['ssa'])
     training=None
     if task_driven:
         from .learning import learn
@@ -143,7 +162,7 @@ def run(config, root, out, task_driven=True):
         rebuilt,weights,training,proxy,selector=learn(config,windows,components)
         timings['learning']={'seconds':time.perf_counter()-start}
         variants['task_ssa']=rebuilt
-        clean_variant('task_ssa_srd_prototype',rebuilt)
+        clean_variant('task_ssa_'+repair_name,rebuilt)
         np.savez_compressed(out/'component_weights.npz',**weights)
         proxy.save_weights(str(out/'proxy.weights.h5'))
         selector.save_weights(str(out/'selector.weights.h5'))
@@ -168,7 +187,10 @@ def run(config, root, out, task_driven=True):
     except (subprocess.CalledProcessError,FileNotFoundError): git_commit=None
     meta={'created_utc':datetime.now(timezone.utc).isoformat(),'python':platform.python_version(),
         'platform':platform.platform(),'versions':versions,'git_commit':git_commit,'seed':config['seed'],
-        'repair_implementation':IMPLEMENTATION,'original_java_parity_verified':False,
+        'repair_implementation':('original_author_java_'+java_srd.runtime['author_commit']) if java_srd else IMPLEMENTATION,
+        'repair_backend':backend,'original_author_java_called':java_srd is not None,
+        'java_srd_provenance':java_srd.provenance() if java_srd else None,
+        'original_java_parity_verified':bool(java_srd and java_srd.provenance()['adapter_verified_against_author_smoke']),
         'pipeline_training':'Frozen proxy supervises selector BEFORE SRD; no backprop through repair',
         'forecaster':'Independent Ridge, refit per method with the same alpha',
         'evaluation_splits':config.get('evaluation_splits',['val','test']),
@@ -176,7 +198,8 @@ def run(config, root, out, task_driven=True):
         'selector_mode':config.get('selector_mode','raw_conv'),
         'corruption_seed':config.get('corruption_seed',config['seed']),
         'limitations':['Single seed, small evenly sampled subset','Reference observations are not guaranteed clean',
-            'SRD-style Python prototype; not original-author SRD equivalence','No claim of novelty or effectiveness',
+            ('Pinned author Java implementation; not a complete paper replication' if java_srd else
+             'SRD-style Python prototype; not original-author SRD equivalence'),'No claim of novelty or effectiveness',
             'Each run has one input condition; no noise-source sweep or multiple final predictors'],
         'timings':timings,'elapsed_seconds_before_plots':time.perf_counter()-started}
     make_plots(out,times,reference,observed_z*std+mean,int(windows['train']['origins'][0]),windows,variants,rows,training)

@@ -1,0 +1,23 @@
+{
+  "base_config": "configs/pilot.json",
+  "repair_backend": "java",
+  "author_commit": "84486b6c15e02f17ac32c80b827afb17e09802b9",
+  "conditions": ["reference", "mixed"],
+  "thresholds": [3.0, 6.0, 9.0],
+  "training_seed": 42,
+  "corruption_seed": 42,
+  "selector_mode": "proxy_features",
+  "evaluation_splits": ["val"],
+  "purpose": "Verify original-Java integration and report all declared thresholds; not select a best test setting.",
+  "fixed_choices": {
+    "history": 432,
+    "horizon": 144,
+    "max_train": 36,
+    "max_val": 12,
+    "proxy_epochs": 25,
+    "selector_epochs": 15,
+    "proxy_frozen": true,
+    "initialization_unchanged": true,
+    "no_test_evaluation": true
+  }
+}
