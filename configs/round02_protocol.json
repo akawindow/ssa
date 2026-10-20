@@ -1,0 +1,23 @@
+{
+  "base_config": "configs/pilot.json",
+  "conditions": ["reference", "mixed"],
+  "selector_modes": ["raw_conv", "proxy_features", "random_features"],
+  "training_seeds": [42, 43, 44],
+  "corruption_seed": 42,
+  "evaluation_splits": ["val"],
+  "hypotheses": [
+    "Reference-input control quantifies damage from added perturbations and from processing normal observations.",
+    "Pretrained proxy features may outperform the original raw-convolution selector.",
+    "A matched random-frozen-feature selector distinguishes feature pretraining from a different selector architecture."
+  ],
+  "locked_choices": {
+    "proxy_update": "frozen",
+    "selector_bias": 4.0,
+    "feature_readout_initializer_seed": 731,
+    "proxy_epochs": 25,
+    "selector_epochs": 15,
+    "sample_counts": [36, 12],
+    "no_test_evaluation": true,
+    "no_hyperparameter_search": true
+  }
+}

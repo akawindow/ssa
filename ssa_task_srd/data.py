@@ -43,7 +43,7 @@ def fit_scale(values, train_end):
 
 def inject(reference_z, config):
     """One reproducible timeline realization shared by all overlapping windows."""
-    rng = np.random.default_rng(config['seed'])
+    rng = np.random.default_rng(config.get('corruption_seed', config['seed']))
     out = np.array(reference_z, copy=True)
     out += rng.normal(0, config['noise_std'], len(out))
     mask = np.zeros(len(out), dtype=bool)
@@ -67,6 +67,8 @@ def make_windows(reference_z, observed_z, mask, config):
         'val': all_origins[(all_origins >= train_end) & (all_origins+horizon <= val_end)],
         'test': all_origins[all_origins >= val_end],
     }
+    if 'test' not in config.get('evaluation_splits', ['val', 'test']):
+        conditions.pop('test')
     result = {}
     for split, origins in conditions.items():
         limit = config.get('max_'+split)

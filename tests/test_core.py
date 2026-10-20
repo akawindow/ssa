@@ -67,7 +67,53 @@ class ScientificChecks(unittest.TestCase):
         with self.assertRaises(ValueError):decompose(np.ones(20),30,2)
         with self.assertRaises(ValueError):decompose(np.ones((2,20)),5,2)
 
-    def test_classification_style_feedback_reaches_selector_not_proxy(self):
+    def test_validation_only_does_not_construct_test_windows(self):
+        x=np.arange(1200,dtype=float)
+        config={'history':72,'horizon':24,'stride':24,'evaluation_splits':['val']}
+        windows,b=make_windows(x,x,np.zeros(len(x),dtype=bool),config)
+        self.assertEqual(set(windows),{'train','val'})
+        changed=x.copy();changed[b['val_end']:]=1e12
+        other,_=make_windows(changed,changed,np.zeros(len(x),dtype=bool),config)
+        for split in windows:
+            for field in ['x','reference','y','origins']:
+                np.testing.assert_array_equal(windows[split][field],other[split][field])
+
+    def test_corruption_seed_is_independent_of_training_seed(self):
+        config={'seed':42,'corruption_seed':7,'noise_std':.1,'outlier_rate':.03,'outlier_scale':3,'outlier_length':3}
+        a,ma=inject(np.zeros(100),config)
+        config['seed']=44
+        b,mb=inject(np.zeros(100),config)
+        np.testing.assert_array_equal(a,b);np.testing.assert_array_equal(ma,mb)
+
+    def test_feature_controls_have_matched_trainable_heads_and_frozen_features(self):
+        try:
+            from ssa_task_srd.learning import tensorflow,build_proxy,build_feature_selector,weight_digest
+            tf=tensorflow(42)
+        except ImportError:
+            self.skipTest('Optional TensorFlow dependency is absent')
+        proxy=build_proxy(tf,72,24)
+        initial=[w.copy() for w in proxy.layers[0].get_weights()]
+        # Simulate a learned feature extractor, keeping the saved random control distinct.
+        proxy.layers[0].set_weights([w+.01 for w in initial]);proxy.trainable=False
+        frozen=[w.copy() for w in proxy.get_weights()]
+        selectors=[build_feature_selector(tf,proxy,72,mode,initial)
+            for mode in ['proxy_features','random_features']]
+        self.assertEqual([sum(np.prod(v.shape) for v in s.trainable_variables) for s in selectors],[33,33])
+        self.assertEqual(*[weight_digest([v.numpy() for v in s.trainable_variables]) for s in selectors])
+        c=tf.constant(np.random.default_rng(1).normal(size=(2,4,72)),dtype=tf.float32)
+        for selector in selectors:
+            frozen_selector=[v.numpy().copy() for v in selector.non_trainable_variables]
+            with tf.GradientTape() as tape:
+                w=tf.reshape(selector(tf.reshape(c,[-1,72,1])),[2,4,1])
+                loss=tf.reduce_mean(proxy(tf.reduce_sum(c*w,axis=1))**2)
+            gradients=tape.gradient(loss,selector.trainable_variables)
+            self.assertTrue(all(g is not None for g in gradients))
+            self.assertGreater(sum(float(tf.reduce_sum(tf.abs(g))) for g in gradients),0)
+            tf.keras.optimizers.Adam(.001).apply_gradients(zip(gradients,selector.trainable_variables))
+            self.assertTrue(all(np.array_equal(a,b.numpy()) for a,b in zip(frozen_selector,selector.non_trainable_variables)))
+        self.assertTrue(all(np.array_equal(a,b) for a,b in zip(frozen,proxy.get_weights())))
+
+    def test_forecasting_feedback_reaches_selector_not_proxy(self):
         try:
             from ssa_task_srd.learning import tensorflow,build_proxy,build_selector
             tf=tensorflow(42)

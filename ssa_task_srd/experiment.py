@@ -40,6 +40,10 @@ def validate_config(config):
         raise ValueError('Invalid retained rank')
     if not 0 <= config['outlier_rate'] <= 1:
         raise ValueError('Invalid outlier rate')
+    if config.get('evaluation_splits', ['val','test']) not in (['val'], ['val','test']):
+        raise ValueError('evaluation_splits must be [val] or [val, test]')
+    if config.get('selector_mode','raw_conv') not in ['raw_conv','proxy_features','random_features']:
+        raise ValueError('Invalid selector mode')
 
 
 def cached_components(root, windows, config):
@@ -79,17 +83,18 @@ def make_plots(out,times,values,observed,origin,windows,variants,rows,training):
     axes[1].set_title('Training input example; perturbations applied only to model inputs')
     axes[1].legend();fig.savefig(out/'data_preview.png',dpi=140);plt.close(fig)
     fig,ax=plt.subplots(figsize=(11,4),layout='constrained')
-    ax.plot(windows['test']['reference'][0],color='black',lw=1,label='Reference')
+    display_split = 'test' if 'test' in windows else 'val'
+    ax.plot(windows[display_split]['reference'][0],color='black',lw=1,label='Reference')
     for name,split_data in variants.items():
-        ax.plot(split_data['test'][0],lw=.8,alpha=.75,label=name)
-    ax.set_title('Example processed history (exploratory held-out sample)')
+        ax.plot(split_data[display_split][0],lw=.8,alpha=.75,label=name)
+    ax.set_title(f'Example processed history ({display_split}; exploratory)')
     ax.legend(ncol=3,fontsize=8);fig.savefig(out/'processing_preview.png',dpi=140);plt.close(fig)
     fig,ax=plt.subplots(figsize=(9,4),layout='constrained')
-    selected=[r for r in rows if r['split']=='test']
+    selected=[r for r in rows if r['split']==display_split]
     ax.bar([r['method'] for r in selected],[r['forecast_rmse_original'] for r in selected])
     ax.tick_params(axis='x',labelrotation=20)
     ax.set_ylabel('Forecast RMSE (original units)')
-    ax.set_title('Single-seed engineering pilot; not evidence of general superiority')
+    ax.set_title(f'{display_split}: single-seed pilot; not evidence of general superiority')
     fig.savefig(out/'forecast_comparison.png',dpi=140);plt.close(fig)
     if training:
         fig,axes=plt.subplots(1,2,figsize=(10,3.5),layout='constrained')
@@ -148,7 +153,7 @@ def run(config, root, out, task_driven=True):
         print(f'Evaluating independent ridge forecaster: {name}',flush=True)
         model=Ridge(alpha=config['ridge_alpha'],solver='lsqr')
         model.fit(inputs['train'],windows['train']['y'])
-        for split in ['val','test']:
+        for split in config.get('evaluation_splits',['val','test']):
             prediction=model.predict(inputs[split])
             score=metrics(prediction,windows[split]['y'],std)
             rows.append({'method':name,'split':split,'forecast_mae_original':score['mae'],'forecast_rmse_original':score['rmse'],
@@ -166,14 +171,19 @@ def run(config, root, out, task_driven=True):
         'repair_implementation':IMPLEMENTATION,'original_java_parity_verified':False,
         'pipeline_training':'Frozen proxy supervises selector BEFORE SRD; no backprop through repair',
         'forecaster':'Independent Ridge, refit per method with the same alpha',
+        'evaluation_splits':config.get('evaluation_splits',['val','test']),
+        'test_windows_constructed':'test' in windows,
+        'selector_mode':config.get('selector_mode','raw_conv'),
+        'corruption_seed':config.get('corruption_seed',config['seed']),
         'limitations':['Single seed, small evenly sampled subset','Reference observations are not guaranteed clean',
             'SRD-style Python prototype; not original-author SRD equivalence','No claim of novelty or effectiveness',
-            'No clean-input condition, noise-source sweep or multiple final predictors yet'],
+            'Each run has one input condition; no noise-source sweep or multiple final predictors'],
         'timings':timings,'elapsed_seconds_before_plots':time.perf_counter()-started}
     make_plots(out,times,reference,observed_z*std+mean,int(windows['train']['origins'][0]),windows,variants,rows,training)
     meta['elapsed_seconds_total']=time.perf_counter()-started
     (out/'run_metadata.json').write_text(json.dumps(meta,indent=2),encoding='utf-8')
     np.savez_compressed(out/'perturbation.npz',outlier_mask=mask,observed_z=observed_z,reference_z=reference_z)
-    print(pd.DataFrame(rows).query('split == "test"').to_string(index=False),flush=True)
+    display_split = 'test' if 'test' in windows else 'val'
+    print(pd.DataFrame(rows).query('split == @display_split').to_string(index=False),flush=True)
     print(f'Completed: {out}; {meta["elapsed_seconds_total"]:.2f}s',flush=True)
     return rows,meta
