@@ -6,6 +6,8 @@
 
 本轮同时换了数据、任务和下游结构，不能把与此前Tetouan的差异单独归因于“分类比预测好/坏”；也不能据此认定所有分类数据上的SSA都无效。该组合仍是探索方案，不是已确认论文创新或去噪成功。
 
+用户追问后的逐项源码/论文核对见 [分类迁移与TASK差异](CLASSIFICATION_TASK_AUDIT.md)。该补充只分析已有代码和日志，没有新训练；其中明确记录了BN/Dropout、Flatten/GAP、分类输出约束、起始输入不适应和原始基线预算等差异。
+
 ## 运行前规则与来源
 
 - 协议及执行代码先提交为 `7bc05dc61eaed4aebda218fbe3a63e95d887d992`；配置为 `configs/classification_protocol.json`。
