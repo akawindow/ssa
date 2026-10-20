@@ -1,0 +1,414 @@
+{
+  "status": "All paired initialization, shared-feature, update-budget, no-corruption/no-repair/no-test and scale-identity checks passed",
+  "runs": [
+    {
+      "case": "coarse_current",
+      "seed": 42,
+      "components": 7,
+      "pretrained_proxy_sha256": "a22831d69ee73c7d8a2cc7687ba7e9f9d233cd078796b555ba32f25aca816875",
+      "initial_head_sha256": "3a4ec7791a3ec33d84008a7583291924644600435d844c41bb526aa7dbb07344",
+      "batch_order_sha256": "2237ef298c89cb001f4044f5e01aecb4caff2de565ccefc1f6a34e987b46b3ff",
+      "initial_retention_mean": 0.9861345291137695,
+      "final_retention_mean": 0.9881826043128967,
+      "initial_sigmoid_slope": 0.01355616096407175,
+      "final_sigmoid_slope": 0.011617504060268402,
+      "final_within_window_weight_std": 0.006382518447935581,
+      "final_head_kernel_norm": 1.1973443031311035,
+      "head_max_norm": null,
+      "head_parameters": 33,
+      "proxy_parameters": 18608,
+      "head_steps": 480,
+      "proxy_steps": 480,
+      "best_epoch": 11,
+      "learning_seconds": 6.7026721000002,
+      "phase_audit": {
+        "selector_phase": {
+          "proxy_unchanged": true,
+          "head_updated": true,
+          "head_gradient_norm": 0.03916841000318527
+        },
+        "proxy_phase": {
+          "executed": true,
+          "head_unchanged": true,
+          "proxy_updated": true,
+          "shared_features_updated": true
+        }
+      }
+    },
+    {
+      "case": "full_current",
+      "seed": 42,
+      "components": 145,
+      "pretrained_proxy_sha256": "a22831d69ee73c7d8a2cc7687ba7e9f9d233cd078796b555ba32f25aca816875",
+      "initial_head_sha256": "3a4ec7791a3ec33d84008a7583291924644600435d844c41bb526aa7dbb07344",
+      "batch_order_sha256": "2237ef298c89cb001f4044f5e01aecb4caff2de565ccefc1f6a34e987b46b3ff",
+      "initial_retention_mean": 0.9824354648590088,
+      "final_retention_mean": 0.9834664463996887,
+      "initial_sigmoid_slope": 0.01725040003657341,
+      "final_sigmoid_slope": 0.01625666581094265,
+      "final_within_window_weight_std": 0.0018183373613283038,
+      "final_head_kernel_norm": 1.192624807357788,
+      "head_max_norm": null,
+      "head_parameters": 33,
+      "proxy_parameters": 18608,
+      "head_steps": 480,
+      "proxy_steps": 480,
+      "best_epoch": 11,
+      "learning_seconds": 9.208403599997837,
+      "phase_audit": {
+        "selector_phase": {
+          "proxy_unchanged": true,
+          "head_updated": true,
+          "head_gradient_norm": 0.03583519160747528
+        },
+        "proxy_phase": {
+          "executed": true,
+          "head_unchanged": true,
+          "proxy_updated": true,
+          "shared_features_updated": true
+        }
+      }
+    },
+    {
+      "case": "coarse_task_head",
+      "seed": 42,
+      "components": 7,
+      "pretrained_proxy_sha256": "a22831d69ee73c7d8a2cc7687ba7e9f9d233cd078796b555ba32f25aca816875",
+      "initial_head_sha256": "686a984d80031b0d8c968c29ed91b7f95aad5945183d08ba0cbaee6437e703fc",
+      "batch_order_sha256": "2237ef298c89cb001f4044f5e01aecb4caff2de565ccefc1f6a34e987b46b3ff",
+      "initial_retention_mean": 0.6081385612487793,
+      "final_retention_mean": 0.5252606272697449,
+      "initial_sigmoid_slope": 0.21849443018436432,
+      "final_sigmoid_slope": 0.24827256798744202,
+      "final_within_window_weight_std": 0.03228853642940521,
+      "final_head_kernel_norm": 0.2435535341501236,
+      "head_max_norm": 0.25,
+      "head_parameters": 33,
+      "proxy_parameters": 18608,
+      "head_steps": 480,
+      "proxy_steps": 480,
+      "best_epoch": 14,
+      "learning_seconds": 6.076779299997725,
+      "phase_audit": {
+        "selector_phase": {
+          "proxy_unchanged": true,
+          "head_updated": true,
+          "head_gradient_norm": 0.18473438918590546
+        },
+        "proxy_phase": {
+          "executed": true,
+          "head_unchanged": true,
+          "proxy_updated": true,
+          "shared_features_updated": true
+        }
+      }
+    },
+    {
+      "case": "full_task_head",
+      "seed": 42,
+      "components": 145,
+      "pretrained_proxy_sha256": "a22831d69ee73c7d8a2cc7687ba7e9f9d233cd078796b555ba32f25aca816875",
+      "initial_head_sha256": "686a984d80031b0d8c968c29ed91b7f95aad5945183d08ba0cbaee6437e703fc",
+      "batch_order_sha256": "2237ef298c89cb001f4044f5e01aecb4caff2de565ccefc1f6a34e987b46b3ff",
+      "initial_retention_mean": 0.5082296133041382,
+      "final_retention_mean": 0.5104588866233826,
+      "initial_sigmoid_slope": 0.24852336943149567,
+      "final_sigmoid_slope": 0.24987328052520752,
+      "final_within_window_weight_std": 0.004077766556292772,
+      "final_head_kernel_norm": 0.20190788805484772,
+      "head_max_norm": 0.25,
+      "head_parameters": 33,
+      "proxy_parameters": 18608,
+      "head_steps": 480,
+      "proxy_steps": 480,
+      "best_epoch": 14,
+      "learning_seconds": 8.442607100001624,
+      "phase_audit": {
+        "selector_phase": {
+          "proxy_unchanged": true,
+          "head_updated": true,
+          "head_gradient_norm": 0.17414787411689758
+        },
+        "proxy_phase": {
+          "executed": true,
+          "head_unchanged": true,
+          "proxy_updated": true,
+          "shared_features_updated": true
+        }
+      }
+    },
+    {
+      "case": "coarse_current",
+      "seed": 43,
+      "components": 7,
+      "pretrained_proxy_sha256": "ab718cda854e746e1db87dd9c32a367ee1ffd88fdd06e6b590e4fe07edb43c38",
+      "initial_head_sha256": "3a4ec7791a3ec33d84008a7583291924644600435d844c41bb526aa7dbb07344",
+      "batch_order_sha256": "59693117d83b05170d82ed3d2e036e3ae61395f028b3677b3ea645739901be9b",
+      "initial_retention_mean": 0.9833681583404541,
+      "final_retention_mean": 0.9837918281555176,
+      "initial_sigmoid_slope": 0.016333691775798798,
+      "final_sigmoid_slope": 0.0159075278788805,
+      "final_within_window_weight_std": 0.005678363610059023,
+      "final_head_kernel_norm": 1.4105406999588013,
+      "head_max_norm": null,
+      "head_parameters": 33,
+      "proxy_parameters": 18608,
+      "head_steps": 480,
+      "proxy_steps": 480,
+      "best_epoch": 8,
+      "learning_seconds": 6.169875800002046,
+      "phase_audit": {
+        "selector_phase": {
+          "proxy_unchanged": true,
+          "head_updated": true,
+          "head_gradient_norm": 0.028359677642583847
+        },
+        "proxy_phase": {
+          "executed": true,
+          "head_unchanged": true,
+          "proxy_updated": true,
+          "shared_features_updated": true
+        }
+      }
+    },
+    {
+      "case": "full_current",
+      "seed": 43,
+      "components": 145,
+      "pretrained_proxy_sha256": "ab718cda854e746e1db87dd9c32a367ee1ffd88fdd06e6b590e4fe07edb43c38",
+      "initial_head_sha256": "3a4ec7791a3ec33d84008a7583291924644600435d844c41bb526aa7dbb07344",
+      "batch_order_sha256": "59693117d83b05170d82ed3d2e036e3ae61395f028b3677b3ea645739901be9b",
+      "initial_retention_mean": 0.9822685718536377,
+      "final_retention_mean": 0.9821053147315979,
+      "initial_sigmoid_slope": 0.017415937036275864,
+      "final_sigmoid_slope": 0.017572490498423576,
+      "final_within_window_weight_std": 0.0013496690662577748,
+      "final_head_kernel_norm": 1.4041852951049805,
+      "head_max_norm": null,
+      "head_parameters": 33,
+      "proxy_parameters": 18608,
+      "head_steps": 480,
+      "proxy_steps": 480,
+      "best_epoch": 13,
+      "learning_seconds": 8.394472899999528,
+      "phase_audit": {
+        "selector_phase": {
+          "proxy_unchanged": true,
+          "head_updated": true,
+          "head_gradient_norm": 0.02836580201983452
+        },
+        "proxy_phase": {
+          "executed": true,
+          "head_unchanged": true,
+          "proxy_updated": true,
+          "shared_features_updated": true
+        }
+      }
+    },
+    {
+      "case": "coarse_task_head",
+      "seed": 43,
+      "components": 7,
+      "pretrained_proxy_sha256": "ab718cda854e746e1db87dd9c32a367ee1ffd88fdd06e6b590e4fe07edb43c38",
+      "initial_head_sha256": "686a984d80031b0d8c968c29ed91b7f95aad5945183d08ba0cbaee6437e703fc",
+      "batch_order_sha256": "59693117d83b05170d82ed3d2e036e3ae61395f028b3677b3ea645739901be9b",
+      "initial_retention_mean": 0.5285596251487732,
+      "final_retention_mean": 0.49182185530662537,
+      "initial_sigmoid_slope": 0.2447894662618637,
+      "final_sigmoid_slope": 0.24693027138710022,
+      "final_within_window_weight_std": 0.05415660887956619,
+      "final_head_kernel_norm": 0.24999991059303284,
+      "head_max_norm": 0.25,
+      "head_parameters": 33,
+      "proxy_parameters": 18608,
+      "head_steps": 480,
+      "proxy_steps": 480,
+      "best_epoch": 15,
+      "learning_seconds": 5.55864930000098,
+      "phase_audit": {
+        "selector_phase": {
+          "proxy_unchanged": true,
+          "head_updated": true,
+          "head_gradient_norm": 0.41958993673324585
+        },
+        "proxy_phase": {
+          "executed": true,
+          "head_unchanged": true,
+          "proxy_updated": true,
+          "shared_features_updated": true
+        }
+      }
+    },
+    {
+      "case": "full_task_head",
+      "seed": 43,
+      "components": 145,
+      "pretrained_proxy_sha256": "ab718cda854e746e1db87dd9c32a367ee1ffd88fdd06e6b590e4fe07edb43c38",
+      "initial_head_sha256": "686a984d80031b0d8c968c29ed91b7f95aad5945183d08ba0cbaee6437e703fc",
+      "batch_order_sha256": "59693117d83b05170d82ed3d2e036e3ae61395f028b3677b3ea645739901be9b",
+      "initial_retention_mean": 0.5040798187255859,
+      "final_retention_mean": 0.5041145086288452,
+      "initial_sigmoid_slope": 0.2497304528951645,
+      "final_sigmoid_slope": 0.24995672702789307,
+      "final_within_window_weight_std": 0.005072483792901039,
+      "final_head_kernel_norm": 0.24995157122612,
+      "head_max_norm": 0.25,
+      "head_parameters": 33,
+      "proxy_parameters": 18608,
+      "head_steps": 480,
+      "proxy_steps": 480,
+      "best_epoch": 5,
+      "learning_seconds": 8.42915350000112,
+      "phase_audit": {
+        "selector_phase": {
+          "proxy_unchanged": true,
+          "head_updated": true,
+          "head_gradient_norm": 0.4145978093147278
+        },
+        "proxy_phase": {
+          "executed": true,
+          "head_unchanged": true,
+          "proxy_updated": true,
+          "shared_features_updated": true
+        }
+      }
+    },
+    {
+      "case": "coarse_current",
+      "seed": 44,
+      "components": 7,
+      "pretrained_proxy_sha256": "6a0d8cc59560b7ab0961420ffaed2c23d27d8f1355701cbc3ac24ab3e2541c5b",
+      "initial_head_sha256": "3a4ec7791a3ec33d84008a7583291924644600435d844c41bb526aa7dbb07344",
+      "batch_order_sha256": "a88500ac16db7aa3e5af97b623a731ce10b3eeaafca89f9b3cffa13e1f167652",
+      "initial_retention_mean": 0.9811857342720032,
+      "final_retention_mean": 0.9827613830566406,
+      "initial_sigmoid_slope": 0.018424000591039658,
+      "final_sigmoid_slope": 0.016887079924345016,
+      "final_within_window_weight_std": 0.007233993150293827,
+      "final_head_kernel_norm": 1.3896723985671997,
+      "head_max_norm": null,
+      "head_parameters": 33,
+      "proxy_parameters": 18608,
+      "head_steps": 480,
+      "proxy_steps": 480,
+      "best_epoch": 10,
+      "learning_seconds": 6.231549199997971,
+      "phase_audit": {
+        "selector_phase": {
+          "proxy_unchanged": true,
+          "head_updated": true,
+          "head_gradient_norm": 0.00044632391654886305
+        },
+        "proxy_phase": {
+          "executed": true,
+          "head_unchanged": true,
+          "proxy_updated": true,
+          "shared_features_updated": true
+        }
+      }
+    },
+    {
+      "case": "full_current",
+      "seed": 44,
+      "components": 145,
+      "pretrained_proxy_sha256": "6a0d8cc59560b7ab0961420ffaed2c23d27d8f1355701cbc3ac24ab3e2541c5b",
+      "initial_head_sha256": "3a4ec7791a3ec33d84008a7583291924644600435d844c41bb526aa7dbb07344",
+      "batch_order_sha256": "a88500ac16db7aa3e5af97b623a731ce10b3eeaafca89f9b3cffa13e1f167652",
+      "initial_retention_mean": 0.9819595217704773,
+      "final_retention_mean": 0.9821065664291382,
+      "initial_sigmoid_slope": 0.01771356537938118,
+      "final_sigmoid_slope": 0.017570719122886658,
+      "final_within_window_weight_std": 0.0015895580872893333,
+      "final_head_kernel_norm": 1.3887269496917725,
+      "head_max_norm": null,
+      "head_parameters": 33,
+      "proxy_parameters": 18608,
+      "head_steps": 480,
+      "proxy_steps": 480,
+      "best_epoch": 10,
+      "learning_seconds": 8.4876019000003,
+      "phase_audit": {
+        "selector_phase": {
+          "proxy_unchanged": true,
+          "head_updated": true,
+          "head_gradient_norm": 0.00033567813807167113
+        },
+        "proxy_phase": {
+          "executed": true,
+          "head_unchanged": true,
+          "proxy_updated": true,
+          "shared_features_updated": true
+        }
+      }
+    },
+    {
+      "case": "coarse_task_head",
+      "seed": 44,
+      "components": 7,
+      "pretrained_proxy_sha256": "6a0d8cc59560b7ab0961420ffaed2c23d27d8f1355701cbc3ac24ab3e2541c5b",
+      "initial_head_sha256": "686a984d80031b0d8c968c29ed91b7f95aad5945183d08ba0cbaee6437e703fc",
+      "batch_order_sha256": "a88500ac16db7aa3e5af97b623a731ce10b3eeaafca89f9b3cffa13e1f167652",
+      "initial_retention_mean": 0.502036452293396,
+      "final_retention_mean": 0.5034700632095337,
+      "initial_sigmoid_slope": 0.24255651235580444,
+      "final_sigmoid_slope": 0.24982191622257233,
+      "final_within_window_weight_std": 0.011473960243165493,
+      "final_head_kernel_norm": 0.24999991059303284,
+      "head_max_norm": 0.25,
+      "head_parameters": 33,
+      "proxy_parameters": 18608,
+      "head_steps": 480,
+      "proxy_steps": 480,
+      "best_epoch": 10,
+      "learning_seconds": 5.619352199999412,
+      "phase_audit": {
+        "selector_phase": {
+          "proxy_unchanged": true,
+          "head_updated": true,
+          "head_gradient_norm": 0.20928770303726196
+        },
+        "proxy_phase": {
+          "executed": true,
+          "head_unchanged": true,
+          "proxy_updated": true,
+          "shared_features_updated": true
+        }
+      }
+    },
+    {
+      "case": "full_task_head",
+      "seed": 44,
+      "components": 145,
+      "pretrained_proxy_sha256": "6a0d8cc59560b7ab0961420ffaed2c23d27d8f1355701cbc3ac24ab3e2541c5b",
+      "initial_head_sha256": "686a984d80031b0d8c968c29ed91b7f95aad5945183d08ba0cbaee6437e703fc",
+      "batch_order_sha256": "a88500ac16db7aa3e5af97b623a731ce10b3eeaafca89f9b3cffa13e1f167652",
+      "initial_retention_mean": 0.49982571601867676,
+      "final_retention_mean": 0.50648432970047,
+      "initial_sigmoid_slope": 0.2496594935655594,
+      "final_sigmoid_slope": 0.24994438886642456,
+      "final_within_window_weight_std": 0.0036186182405799627,
+      "final_head_kernel_norm": 0.24999991059303284,
+      "head_max_norm": 0.25,
+      "head_parameters": 33,
+      "proxy_parameters": 18608,
+      "head_steps": 480,
+      "proxy_steps": 480,
+      "best_epoch": 10,
+      "learning_seconds": 8.525882400001137,
+      "phase_audit": {
+        "selector_phase": {
+          "proxy_unchanged": true,
+          "head_updated": true,
+          "head_gradient_norm": 0.20696361362934113
+        },
+        "proxy_phase": {
+          "executed": true,
+          "head_unchanged": true,
+          "proxy_updated": true,
+          "shared_features_updated": true
+        }
+      }
+    }
+  ],
+  "scope": "Validation exploration, all cases reported; not full EEG TASK reproduction or clean-signal recovery"
+}

@@ -1,0 +1,13 @@
+case,seed,windows,rmse_windows_below_raw,mae_windows_below_raw
+coarse_current,42,54,6,6
+coarse_current,43,54,4,6
+coarse_current,44,54,4,7
+coarse_task_head,42,54,41,36
+coarse_task_head,43,54,46,43
+coarse_task_head,44,54,41,39
+full_current,42,54,5,7
+full_current,43,54,4,5
+full_current,44,54,5,7
+full_task_head,42,54,39,38
+full_task_head,43,54,40,40
+full_task_head,44,54,40,39

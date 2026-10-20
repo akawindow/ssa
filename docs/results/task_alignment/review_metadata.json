@@ -1,0 +1,5 @@
+{
+  "source_run": "runs\\task_alignment_initial",
+  "summary_code_commit": "a356029666a5486aede3411a737ab2ec9bcc08d0",
+  "scope": "Post-run descriptive summary only; no new training, tuning or test evaluation"
+}

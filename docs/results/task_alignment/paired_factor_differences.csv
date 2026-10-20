@@ -1,0 +1,13 @@
+left,right,seed,rmse_left_minus_right
+full_current,coarse_current,42,10.264690871066705
+full_current,coarse_current,43,0.2774852707739228
+full_current,coarse_current,44,-13.692369066167885
+full_task_head,coarse_task_head,42,-7.849468495925976
+full_task_head,coarse_task_head,43,-10.799059269449117
+full_task_head,coarse_task_head,44,-50.33700855217194
+coarse_task_head,coarse_current,42,-237.86051029547207
+coarse_task_head,coarse_current,43,-324.8200317023152
+coarse_task_head,coarse_current,44,-235.80619436422376
+full_task_head,full_current,42,-255.97466966246475
+full_task_head,full_current,43,-335.89657624253823
+full_task_head,full_current,44,-272.4508338502278
