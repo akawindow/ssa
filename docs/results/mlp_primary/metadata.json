@@ -1,0 +1,15 @@
+{
+  "created_utc": "2026-10-20T08:33:59.655548+00:00",
+  "code_commit": "a6cef135357ddec879298e76943d0afdc42bc6d5",
+  "elapsed_seconds": 29.17283330000282,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "training_branches": 15,
+  "primary_evaluation": "Same paired trained MLP on own branch inputs",
+  "independent_ridge_evaluated": false,
+  "assessment_used_for_new_checkpoints": false,
+  "virgin_holdout": false
+}

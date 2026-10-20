@@ -1,0 +1,58 @@
+{
+  "base_config": "configs/ssa_only.json",
+  "scope": "Primary same-architecture MLP task-driven evaluation on original univariate data; independent Ridge is secondary and not run here",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "dataset_overrides": {
+    "max_train": null,
+    "max_val": null
+  },
+  "fit_fraction_of_existing_training_windows": 0.8,
+  "training": {
+    "proxy_epochs": 25,
+    "selector_epochs": 15,
+    "batch_size": 8,
+    "patience": 5,
+    "learning_rate": 0.001,
+    "selector_bias": 0.0,
+    "selector_max_norm": 0.25
+  },
+  "pretraining": "One raw-history MLP per seed; early stopping on selection-only histories; explicitly reload the minimum-selection-loss checkpoint even if training reaches the maximum epoch; all five branches copy exactly the same pretrained parameters",
+  "branches": [
+    "raw_continue",
+    "half_continue",
+    "ssa7_continue",
+    "global_gate",
+    "task_full"
+  ],
+  "branch_meanings": {
+    "raw_continue": "Raw inputs, no input gate; equal number of proxy updates",
+    "half_continue": "Constant 0.5 times raw input before proxy; no gate training",
+    "ssa7_continue": "Fixed first seven SSA components before proxy; no gate training",
+    "global_gate": "Single trainable sigmoid logit initialized at zero; shared across windows/components/time; alternate logit then proxy updates",
+    "task_full": "All 144 elementary SSA components plus exact residual; TASK-style shared features and retention head; alternate head then proxy updates"
+  },
+  "optimizer": "AdamW weight_decay=.004, AMSGrad=True, cosine alpha=.9; global gradient clip=1.0; separate gate and proxy optimizers where applicable",
+  "batch_order": "Same seed+1000 permutation stream and same batch size in every branch",
+  "checkpoint": "Minimum selection MSE among epochs 0..15 for every branch; run all 15 epochs; restore proxy and gate together",
+  "primary_endpoint": "Assessment MAE/RMSE from the paired trained proxy on each branch's own inputs; compare task_full against raw_continue",
+  "mechanism_controls": [
+    "task_full versus fixed 0.5 scaling",
+    "task_full versus learned single global scale",
+    "task_full versus fixed first seven"
+  ],
+  "additional_baselines": [
+    "raw_pretrained",
+    "last_day_persistence"
+  ],
+  "assessment_policy": "Original 54 validation windows; not used for new pretraining, epoch selection or rule choice; accessed for scoring after each branch checkpoint has been selected",
+  "data_limits": "This assessment period was explored in earlier rounds; this is not a virgin holdout or a final confirmatory test",
+  "training_budget_note": "Same number of proxy optimizer updates; gate updates add compute and up to 33 parameters, so not equal FLOPs or total optimizer steps",
+  "no_artificial_corruption": true,
+  "no_repair": true,
+  "no_test_windows": true,
+  "no_external_ridge": true
+}

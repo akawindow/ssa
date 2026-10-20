@@ -1,0 +1,92 @@
+[
+  {
+    "branch": "raw_continue",
+    "seed": 42,
+    "directory": "raw_continue_seed42",
+    "completed": true
+  },
+  {
+    "branch": "half_continue",
+    "seed": 42,
+    "directory": "half_continue_seed42",
+    "completed": true
+  },
+  {
+    "branch": "ssa7_continue",
+    "seed": 42,
+    "directory": "ssa7_continue_seed42",
+    "completed": true
+  },
+  {
+    "branch": "global_gate",
+    "seed": 42,
+    "directory": "global_gate_seed42",
+    "completed": true
+  },
+  {
+    "branch": "task_full",
+    "seed": 42,
+    "directory": "task_full_seed42",
+    "completed": true
+  },
+  {
+    "branch": "raw_continue",
+    "seed": 43,
+    "directory": "raw_continue_seed43",
+    "completed": true
+  },
+  {
+    "branch": "half_continue",
+    "seed": 43,
+    "directory": "half_continue_seed43",
+    "completed": true
+  },
+  {
+    "branch": "ssa7_continue",
+    "seed": 43,
+    "directory": "ssa7_continue_seed43",
+    "completed": true
+  },
+  {
+    "branch": "global_gate",
+    "seed": 43,
+    "directory": "global_gate_seed43",
+    "completed": true
+  },
+  {
+    "branch": "task_full",
+    "seed": 43,
+    "directory": "task_full_seed43",
+    "completed": true
+  },
+  {
+    "branch": "raw_continue",
+    "seed": 44,
+    "directory": "raw_continue_seed44",
+    "completed": true
+  },
+  {
+    "branch": "half_continue",
+    "seed": 44,
+    "directory": "half_continue_seed44",
+    "completed": true
+  },
+  {
+    "branch": "ssa7_continue",
+    "seed": 44,
+    "directory": "ssa7_continue_seed44",
+    "completed": true
+  },
+  {
+    "branch": "global_gate",
+    "seed": 44,
+    "directory": "global_gate_seed44",
+    "completed": true
+  },
+  {
+    "branch": "task_full",
+    "seed": 44,
+    "directory": "task_full_seed44",
+    "completed": true
+  }
+]

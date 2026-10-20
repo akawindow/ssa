@@ -36,3 +36,5 @@ Power Consumption of Tetouan City：Salam, A. & El Hibaoui, A. (2018), UCI。
 共享任务特征、简单选择头与第四轮协同机制借鉴你本地TASK工程 `base_classes.py`、`base_models.py` 的结构和训练顺序，来源：https://github.com/leizheng2005/Task-Oriented_Learning_for_Automatic_EEG_Denoising 。本工程的单变量预测模型和训练实现独立编写，没有再分发TASK源码或权重。第四轮迁移了交替优化核心，但数据、网络、任务损失及部分稳定化设置不同，不能称为完整EEG TASK复现。详见 `docs/COLLABORATIVE_RESULTS.md`。
 
 第七轮重新核对本机TASK实现，新增完整SSA成分、零偏置/max-norm选择头及等预算原始代理、常数缩放和昨日持久性对照。原始工程只读，文件哈希记录在执行元数据中；新配置不改变旧默认值。TASK式头仅迁移选择头的两项设置，并未采用整个EEGNet。当前预测改善未超过简单缩放，不能称为已经证明的去噪效果。见 `docs/TASK_ALIGNMENT_AUDIT.md` 和 `docs/TASK_ALIGNMENT_RESULTS.md`。
+
+第九轮明确主要问题为联合MLP是否超过同初始化、同代理更新预算的原始MLP，独立Ridge仅作次级迁移检验。新的三角色时间划分将本轮检查点选择与评价分开，未使用测试段，未改动D盘TASK源码。本轮没有运行Ridge，仍未观察到稳定的联合MLP增量；长期约定与边界见 `AGENTS.md`、`docs/RESEARCH_DECISIONS.md` 和 `docs/MLP_PRIMARY_RESULTS.md`。

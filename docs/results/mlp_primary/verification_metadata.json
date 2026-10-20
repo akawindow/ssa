@@ -1,0 +1,8 @@
+{
+  "source_run": "runs\\mlp_primary_initial",
+  "code_commit": "117c9dd75ab777e540e095cfa032436a2cdcfceb",
+  "models_reloaded": 18,
+  "neural_training_performed": false,
+  "assessment_not_used_for_selection": true,
+  "shape_diagnostic": "Post-run description only; training histories determine least-squares scalar; not denoising accuracy or a new trained method"
+}
