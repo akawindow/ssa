@@ -1,0 +1,25 @@
+{
+  "base_config": "configs/java_pilot.json",
+  "conditions": ["reference", "mixed"],
+  "training_modes": ["paired_frozen", "collaborative"],
+  "training_seeds": [42, 43, 44],
+  "corruption_seed": 42,
+  "repair_backend": "java",
+  "srd_k": 6.0,
+  "selector_mode": "proxy_features",
+  "evaluation_splits": ["val"],
+  "selector_epochs": 15,
+  "optimizer": "Both modes use separate AdamW, AMSGrad=True, weight_decay=.004, cosine alpha=.9, global gradient clip=1",
+  "training_order": "For both modes identical seeded batches and exactly 75 head steps; collaborative adds 75 proxy steps",
+  "checkpoint": "Lowest reconstructed validation proxy MSE among epochs 1..15; restore proxy/head together",
+  "collaborative_details": {
+    "selector_phase": "Update only the 33-parameter head, proxy and shared features unchanged",
+    "proxy_phase": "Update proxy including shared features, head unchanged; use detached cached pre-head-update reconstruction",
+    "srd_gradients": false,
+    "ridge_used_for_checkpoint_selection": false
+  },
+  "primary_comparison": "Independent Ridge validation RMSE after task SSA plus Java SRD; paired collaborative minus paired_frozen",
+  "secondary_comparisons": ["Task SSA without SRD", "Normal-input damage", "Proxy validation MSE", "Training time"],
+  "scope": "New matched control; legacy frozen runs have different optimizer/schedule/stopping and are historical references only",
+  "limits": ["One fixed corruption realization", "36 train and 12 validation windows", "No test evaluation", "Prediction migration, not full EEG TASK reproduction"]
+}

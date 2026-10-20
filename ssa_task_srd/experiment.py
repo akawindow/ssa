@@ -46,6 +46,10 @@ def validate_config(config):
         raise ValueError('Invalid selector mode')
     if config.get('repair_backend','prototype') not in ['prototype','java']:
         raise ValueError('Invalid repair backend; select prototype or java explicitly')
+    if config.get('training_mode','legacy_frozen') not in ['legacy_frozen','paired_frozen','collaborative']:
+        raise ValueError('Invalid training mode')
+    if config.get('training_mode','legacy_frozen')!='legacy_frozen' and config.get('selector_mode')!='proxy_features':
+        raise ValueError('Paired training comparison requires shared proxy_features')
 
 
 def cached_components(root, windows, config):
@@ -191,7 +195,9 @@ def run(config, root, out, task_driven=True):
         'repair_backend':backend,'original_author_java_called':java_srd is not None,
         'java_srd_provenance':java_srd.provenance() if java_srd else None,
         'original_java_parity_verified':bool(java_srd and java_srd.provenance()['adapter_verified_against_author_smoke']),
-        'pipeline_training':'Frozen proxy supervises selector BEFORE SRD; no backprop through repair',
+        'training_mode':config.get('training_mode','legacy_frozen'),
+        'pipeline_training':('Alternating selector/proxy training BEFORE SRD; no backprop through repair'
+            if config.get('training_mode')=='collaborative' else 'Frozen proxy supervises selector BEFORE SRD; no backprop through repair'),
         'forecaster':'Independent Ridge, refit per method with the same alpha',
         'evaluation_splits':config.get('evaluation_splits',['val','test']),
         'test_windows_constructed':'test' in windows,

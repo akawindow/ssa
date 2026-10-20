@@ -65,6 +65,9 @@ def build_feature_selector(tf, proxy, history, mode, initial_feature_weights):
 
 
 def learn(config, windows, components):
+    if config.get('training_mode','legacy_frozen') in ['paired_frozen','collaborative']:
+        from .collaborative import learn_comparison
+        return learn_comparison(config,windows,components)
     tf = tensorflow(config['seed'])
     proxy = build_proxy(tf, config['history'], config['horizon'])
     initial_feature_weights = [w.copy() for w in proxy.layers[0].get_weights()]
