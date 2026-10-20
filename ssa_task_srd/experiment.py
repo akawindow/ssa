@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import Ridge
 from . import ssa
-from .data import load_series, fit_scale, inject, make_windows
+from .data import load_series, fit_scale, observed_input, make_windows
 from .repair import repair, IMPLEMENTATION
 
 
@@ -29,10 +29,12 @@ def history_metrics(repaired, reference, outlier_mask):
 
 
 def validate_config(config):
-    for key in ['period','history','horizon','stride','embedding','rank','srd_iterations']:
+    keys=['period','history','horizon','stride','embedding','rank']
+    if config.get('repair_backend','prototype')!='none':keys.append('srd_iterations')
+    for key in keys:
         if not isinstance(config[key],int) or config[key]<1:
             raise ValueError(f'{key} must be a positive integer')
-    if config['period']%2 or config['history'] < 2*config['period']:
+    if config.get('repair_backend','prototype')!='none' and (config['period']%2 or config['history'] < 2*config['period']):
         raise ValueError('Repair prototype requires an even period and >=2 cycles')
     if not 2 <= config['embedding'] < config['history']:
         raise ValueError('Invalid embedding')
@@ -44,8 +46,8 @@ def validate_config(config):
         raise ValueError('evaluation_splits must be [val] or [val, test]')
     if config.get('selector_mode','raw_conv') not in ['raw_conv','proxy_features','random_features']:
         raise ValueError('Invalid selector mode')
-    if config.get('repair_backend','prototype') not in ['prototype','java']:
-        raise ValueError('Invalid repair backend; select prototype or java explicitly')
+    if config.get('repair_backend','prototype') not in ['prototype','java','none']:
+        raise ValueError('Invalid repair backend; select prototype, java or none explicitly')
     if config.get('training_mode','legacy_frozen') not in ['legacy_frozen','paired_frozen','collaborative']:
         raise ValueError('Invalid training mode')
     if config.get('training_mode','legacy_frozen')!='legacy_frozen' and config.get('selector_mode')!='proxy_features':
@@ -85,8 +87,11 @@ def make_plots(out,times,values,observed,origin,windows,variants,rows,training):
     axes[0].set_ylabel('Power consumption')
     start=origin-windows['train']['x'].shape[1]
     axes[1].plot(times[start:origin],values[start:origin],lw=1,label='Reference observation')
-    axes[1].plot(times[start:origin],observed[start:origin],lw=.6,alpha=.7,label='Contaminated history')
-    axes[1].set_title('Training input example; perturbations applied only to model inputs')
+    original_input=np.allclose(values,observed,rtol=0,atol=1e-10)
+    axes[1].plot(times[start:origin],observed[start:origin],lw=.6,alpha=.7,
+        label='Model input (no added corruption)' if original_input else 'Contaminated history')
+    axes[1].set_title('Training input example; no added corruption' if original_input else
+        'Training input example; perturbations applied only to model inputs')
     axes[1].legend();fig.savefig(out/'data_preview.png',dpi=140);plt.close(fig)
     fig,ax=plt.subplots(figsize=(11,4),layout='constrained')
     display_split = 'test' if 'test' in windows else 'val'
@@ -121,7 +126,7 @@ def run(config, root, out, task_driven=True):
     train_end=int(.7*len(reference))
     mean,std=fit_scale(reference,train_end)
     reference_z=(reference-mean)/std
-    observed_z,mask=inject(reference_z,config)
+    observed_z,mask=observed_input(reference_z,config)
     windows,boundaries=make_windows(reference_z,observed_z,mask,config)
     audit.update({'split_boundaries':boundaries,'scale_mean':mean,'scale_std':std,'scaler_fit_range':[0,train_end],
         'column':config.get('column','synthetic'),'period_points':config['period'],
@@ -135,6 +140,7 @@ def run(config, root, out, task_driven=True):
     components,cache=cached_components(root,windows,config)
     timings={'ssa':cache}
     backend=config.get('repair_backend','prototype')
+    repair_enabled=backend!='none'
     java_srd=None
     if backend=='java':
         from .java_srd import JavaSRD
@@ -157,8 +163,9 @@ def run(config, root, out, task_driven=True):
             variants[name]={k:np.array([repair(x,config['period'],config['srd_k'],config['srd_iterations']) for x in a]) for k,a in source.items()}
         timings[name]={'seconds':time.perf_counter()-start,'java_batches':batches}
         np.savez_compressed(out/f'histories_{name}.npz',**variants[name])
-    clean_variant(repair_name,variants['raw'])
-    clean_variant('ssa_'+repair_name,variants['ssa'])
+    if repair_enabled:
+        clean_variant(repair_name,variants['raw'])
+        clean_variant('ssa_'+repair_name,variants['ssa'])
     training=None
     if task_driven:
         from .learning import learn
@@ -166,7 +173,8 @@ def run(config, root, out, task_driven=True):
         rebuilt,weights,training,proxy,selector=learn(config,windows,components)
         timings['learning']={'seconds':time.perf_counter()-start}
         variants['task_ssa']=rebuilt
-        clean_variant('task_ssa_'+repair_name,rebuilt)
+        if repair_enabled:clean_variant('task_ssa_'+repair_name,rebuilt)
+        np.savez_compressed(out/'histories_task_ssa.npz',**rebuilt)
         np.savez_compressed(out/'component_weights.npz',**weights)
         proxy.save_weights(str(out/'proxy.weights.h5'))
         selector.save_weights(str(out/'selector.weights.h5'))
@@ -191,20 +199,25 @@ def run(config, root, out, task_driven=True):
     except (subprocess.CalledProcessError,FileNotFoundError): git_commit=None
     meta={'created_utc':datetime.now(timezone.utc).isoformat(),'python':platform.python_version(),
         'platform':platform.platform(),'versions':versions,'git_commit':git_commit,'seed':config['seed'],
-        'repair_implementation':('original_author_java_'+java_srd.runtime['author_commit']) if java_srd else IMPLEMENTATION,
+        'repair_implementation':('disabled_no_repair' if not repair_enabled else
+            ('original_author_java_'+java_srd.runtime['author_commit']) if java_srd else IMPLEMENTATION),
         'repair_backend':backend,'original_author_java_called':java_srd is not None,
+        'repair_enabled':repair_enabled,'input_condition':config.get('input_condition'),
+        'artificial_corruption_applied':bool(config.get('noise_std',0)>0 or config.get('outlier_rate',0)>0),
         'java_srd_provenance':java_srd.provenance() if java_srd else None,
         'original_java_parity_verified':bool(java_srd and java_srd.provenance()['adapter_verified_against_author_smoke']),
         'training_mode':config.get('training_mode','legacy_frozen'),
-        'pipeline_training':('Alternating selector/proxy training BEFORE SRD; no backprop through repair'
-            if config.get('training_mode')=='collaborative' else 'Frozen proxy supervises selector BEFORE SRD; no backprop through repair'),
+        'pipeline_training':(('Alternating selector/proxy training' if config.get('training_mode')=='collaborative'
+            else 'Frozen proxy supervises selector')+(' BEFORE repair; no backprop through repair' if repair_enabled else
+            '; SSA only, repair disabled')),
         'forecaster':'Independent Ridge, refit per method with the same alpha',
         'evaluation_splits':config.get('evaluation_splits',['val','test']),
         'test_windows_constructed':'test' in windows,
         'selector_mode':config.get('selector_mode','raw_conv'),
         'corruption_seed':config.get('corruption_seed',config['seed']),
         'limitations':['Single seed, small evenly sampled subset','Reference observations are not guaranteed clean',
-            ('Pinned author Java implementation; not a complete paper replication' if java_srd else
+            ('SSA-only; no repair algorithm used' if not repair_enabled else
+             'Pinned author Java implementation; not a complete paper replication' if java_srd else
              'SRD-style Python prototype; not original-author SRD equivalence'),'No claim of novelty or effectiveness',
             'Each run has one input condition; no noise-source sweep or multiple final predictors'],
         'timings':timings,'elapsed_seconds_before_plots':time.perf_counter()-started}

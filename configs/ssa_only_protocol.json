@@ -1,0 +1,17 @@
+{
+  "base_config": "configs/ssa_only.json",
+  "input_condition": "reference",
+  "artificial_corruption": false,
+  "repair_backend": "none",
+  "training_seeds": [42, 43, 44],
+  "training_modes": ["paired_frozen", "collaborative"],
+  "static_ranks": [1, 2, 4, 6, 8, 12, 24, 48, 96, 144],
+  "full_decomposition_rank": 144,
+  "ablation_rank": 6,
+  "ablation": "One group removed at a time from six elementary components plus exact residual; keep all other groups",
+  "positive_controls": ["All components including exact residual reproduce input", "Full rank 144 reproduces input up to numerical error", "Drop residual after six equals fixed rank six"],
+  "evaluation_splits": ["val"],
+  "scope": "SSA input reconstruction before independent Ridge, not SSA recurrent forecasting",
+  "selection_rule": "Report every prespecified rank and deletion; exploratory validation minimum is not a final tuned method",
+  "no_clean_ground_truth": "Report input-change RMS as modification magnitude, not denoising accuracy"
+}

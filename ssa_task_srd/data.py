@@ -55,6 +55,15 @@ def inject(reference_z, config):
     return out, mask
 
 
+def observed_input(reference_z, config):
+    """Original-observation experiments bypass error injection entirely."""
+    if config.get('input_condition') == 'reference':
+        if config.get('noise_std',0)!=0 or config.get('outlier_rate',0)!=0:
+            raise ValueError('Reference condition requires zero added noise and error rates')
+        return np.array(reference_z,copy=True),np.zeros(len(reference_z),dtype=bool)
+    return inject(reference_z,config)
+
+
 def make_windows(reference_z, observed_z, mask, config):
     n = len(reference_z)
     train_end, val_end = int(.7*n), int(.85*n)
