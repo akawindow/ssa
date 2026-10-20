@@ -49,5 +49,13 @@ class OriginalObservationSSAChecks(unittest.TestCase):
         full_model=Ridge(alpha=1,solver='cholesky').fit(full[:8],y[:8])
         np.testing.assert_allclose(raw_model.predict(x[8:]),full_model.predict(full[8:]),atol=1e-10,rtol=0)
 
+    def test_constant_scaling_matches_ridge_when_penalty_is_scaled(self):
+        from sklearn.linear_model import Ridge
+        rng=np.random.default_rng(4)
+        x=rng.normal(size=(20,24));y=rng.normal(size=(20,8));scale=.51
+        raw=Ridge(alpha=1,solver='cholesky').fit(x[:16],y[:16])
+        matched=Ridge(alpha=scale**2,solver='cholesky').fit(x[:16]*scale,y[:16])
+        np.testing.assert_allclose(raw.predict(x[16:]),matched.predict(x[16:]*scale),atol=1e-10,rtol=0)
+
 
 if __name__=='__main__':unittest.main()

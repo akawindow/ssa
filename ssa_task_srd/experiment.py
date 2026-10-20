@@ -52,6 +52,10 @@ def validate_config(config):
         raise ValueError('Invalid training mode')
     if config.get('training_mode','legacy_frozen')!='legacy_frozen' and config.get('selector_mode')!='proxy_features':
         raise ValueError('Paired training comparison requires shared proxy_features')
+    if not np.isfinite(config.get('selector_bias',4.0)):
+        raise ValueError('Selector bias must be finite')
+    if config.get('selector_max_norm') is not None and config['selector_max_norm']<=0:
+        raise ValueError('Selector max norm must be positive')
 
 
 def cached_components(root, windows, config):

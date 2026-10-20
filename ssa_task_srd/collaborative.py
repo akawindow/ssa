@@ -17,11 +17,14 @@ def build_alternating_task(tf,proxy,history,config):
     proxy.trainable=True
     extractor=tf.keras.Model(proxy.inputs,proxy.layers[0].output,name='shared_task_features')
     extractor.trainable=True
+    bias=float(config.get('selector_bias',4.0))
+    max_norm=config.get('selector_max_norm')
     head=tf.keras.Sequential([
         tf.keras.layers.Input(shape=(32,)),
         tf.keras.layers.Dense(1,activation='sigmoid',name='retention_head',
             kernel_initializer=tf.keras.initializers.GlorotUniform(seed=731),
-            bias_initializer=tf.keras.initializers.Constant(4.0))],name='selector_head')
+            bias_initializer=tf.keras.initializers.Constant(bias),
+            kernel_constraint=tf.keras.constraints.max_norm(float(max_norm)) if max_norm is not None else None)],name='selector_head')
     selector_input=tf.keras.Input(shape=(history,1))
     selector=tf.keras.Model(selector_input,
         head(extractor(tf.keras.layers.Flatten()(selector_input))),name='shared_task_selector')
@@ -96,6 +99,8 @@ def learn_comparison(config,windows,components):
         initial_summary[split]=weight_summary(w.numpy()[...,0])
         initial_proxy_predictions[split]=proxy(rebuilt,training=False).numpy()
         initial_mse[split]=float(np.square(initial_proxy_predictions[split]-windows[split]['y']).mean())
+    initial_sigmoid_slope={k:float(np.mean(v*(1-v))) for k,v in
+        ((split,task.reconstruct(c)[1].numpy()) for split,c in components.items())}
 
     histories={'loss':[],'val_loss':[]}
     epoch_rows=[];first_step_audit=None
@@ -166,7 +171,12 @@ def learn_comparison(config,windows,components):
             prediction=proxy(a,training=False).numpy()
             diagnostics[split][name+'_mse_z']=float(np.square(prediction-windows[split]['y']).mean())
     training={'proxy_loss':pretraining.history,'selector_loss':histories,'epoch_records':epoch_rows,
-        'training_mode':mode,'selector_mode':'proxy_features','selector_bias_initialization':4.0,
+        'training_mode':mode,'selector_mode':'proxy_features',
+        'selector_bias_initialization':float(config.get('selector_bias',4.0)),
+        'selector_max_norm':config.get('selector_max_norm'),
+        'initial_sigmoid_slope':initial_sigmoid_slope,
+        'final_sigmoid_slope':{k:float(np.mean(v*(1-v))) for k,v in weights.items()},
+        'final_head_kernel_norm':float(np.linalg.norm(task.head.get_weights()[0])),
         'proxy_weights_unchanged':proxy_unchanged,'selector_weights_updated':head_updated,
         'selector_head_weights_updated':head_updated,
         'shared_features_updated':not equal_weights(initial_features,task.feature_extractor.get_weights()),
@@ -189,4 +199,38 @@ def learn_comparison(config,windows,components):
         'optimizer':'Separate AdamW, weight_decay=.004, AMSGrad=True, cosine alpha=.9, global gradient clip=1',
         'supervision':'Future forecast targets; no clean-history reconstruction loss; no SRD gradients',
         'proxy_pretraining_input':'Original reference histories, not artificially contaminated histories'}
+    if config.get('raw_proxy_control',False):
+        # Budget-matched proxy adaptation on raw inputs. Run after the main task
+        # so this diagnostic cannot affect its initialization or optimization.
+        control=build_proxy(tf,config['history'],config['horizon'])
+        control.set_weights(initial_proxy)
+        steps=config['selector_epochs']*int(np.ceil(len(windows['train']['x'])/config['batch_size']))
+        schedule=tf.keras.optimizers.schedules.CosineDecay(config['learning_rate'],steps,alpha=.9)
+        opt=tf.keras.optimizers.AdamW(schedule,weight_decay=.004,amsgrad=True)
+        @tf.function
+        def raw_step(x,y):
+            with tf.GradientTape() as tape:
+                loss=tf.reduce_mean(tf.square(control(x,training=True)-tf.cast(y,tf.float32)))
+            grad=tape.gradient(loss,control.trainable_variables)
+            grad,_=tf.clip_by_global_norm(grad,1.0)
+            opt.apply_gradients(zip(grad,control.trainable_variables))
+        initial_control=weight_digest(control.get_weights())
+        baseline_pred=control(windows['val']['x'],training=False).numpy()
+        rng_control=np.random.default_rng(config['seed']+1000)
+        control_order=hashlib.sha256();best_control=np.inf;best_control_epoch=None
+        for epoch in range(config['selector_epochs']):
+            order=rng_control.permutation(len(windows['train']['x']));control_order.update(order.astype('<i8').tobytes())
+            for start in range(0,len(order),config['batch_size']):
+                ix=order[start:start+config['batch_size']]
+                raw_step(windows['train']['x'][ix],windows['train']['y'][ix])
+            prediction=control(windows['val']['x'],training=False).numpy()
+            loss=float(np.square(prediction-windows['val']['y']).mean())
+            if loss<best_control:
+                best_control=loss;best_control_epoch=epoch+1
+        assert initial_control==weight_digest(initial_proxy) and control_order.hexdigest()==order_hash.hexdigest()
+        training['raw_proxy_control']={'initial_proxy_sha256':initial_control,
+            'initial_validation_mse_z':float(np.square(baseline_pred-windows['val']['y']).mean()),
+            'best_validation_mse_z':best_control,'best_epoch':best_control_epoch,
+            'optimizer_steps':int(opt.iterations.numpy()),'batch_order_sha256':control_order.hexdigest(),
+            'scope':'Raw histories, no selector; same proxy initialization, batches, optimizer and 1..N checkpoint budget; diagnostic, no new denoiser'}
     return rebuilt,weights,training,proxy,task.selector

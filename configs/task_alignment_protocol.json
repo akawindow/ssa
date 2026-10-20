@@ -1,0 +1,28 @@
+{
+  "base_config": "configs/ssa_only.json",
+  "scope": "Univariate original-observation validation audit; no added corruption or SRD; no test use",
+  "training_seeds": [42, 43, 44],
+  "common_overrides": {
+    "max_train": null,
+    "max_val": null,
+    "training_mode": "collaborative",
+    "ridge_solver": "cholesky",
+    "selector_epochs": 15,
+    "proxy_epochs": 25
+  },
+  "cases": [
+    {"name": "coarse_current", "rank": 6, "selector_bias": 4.0, "selector_max_norm": null, "raw_proxy_control": true},
+    {"name": "full_current", "rank": 144, "selector_bias": 4.0, "selector_max_norm": null},
+    {"name": "coarse_task_head", "rank": 6, "selector_bias": 0.0, "selector_max_norm": 0.25},
+    {"name": "full_task_head", "rank": 144, "selector_bias": 0.0, "selector_max_norm": 0.25}
+  ],
+  "head_factor_interpretation": "TASK-style head changes bias AND max-norm together; this factorial identifies the head-setting bundle, not either individual cause",
+  "fixed_diagnostics": ["raw", "ssa_6", "ssa_7", "protect_candidate_C6_C7", "all_components_identity", "last_day_persistence"],
+  "pair_rule": "Use rank 7 only when C6/C7 meets the already recorded structure thresholds; otherwise rank 6. No threshold tuning.",
+  "scalar_controls": "Constant train-mean retention weight applied to raw histories; Ridge alpha=1, and penalty-matched alpha=s^2; estimate scalar from training weights only",
+  "proxy_control": "Continue raw proxy training with identical initialization, batches, optimizer, updates and validation checkpoint budget; run for each seed in coarse_current only",
+  "primary_endpoint": "Independent Ridge validation MAE and RMSE, refit per processed training input with fixed alpha=1",
+  "secondary_endpoints": ["proxy MSE versus equal-budget raw adaptation", "initial/final sigmoid slope", "component weights", "per-window errors", "scale-only explanation", "training time"],
+  "checkpoint": "Validation proxy MSE for coupled proxy/head; independent Ridge never used for checkpoint selection",
+  "constraints": ["All raw/fixed controls use same new window set", "Do not compare current full-window scores directly to old 36/12 subset", "Report all cases and seeds", "No clean-signal recovery accuracy claim", "No parameter growth with component count; increased component count does increase compute"]
+}

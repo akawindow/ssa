@@ -64,5 +64,21 @@ class AlternatingOptimizationChecks(unittest.TestCase):
         after,_=self.task.reconstruct(self.c)
         np.testing.assert_array_equal(after.numpy(),reconstructed.numpy())
 
+    def test_task_style_head_zero_bias_and_max_norm_are_applied(self):
+        from ssa_task_srd.collaborative import build_alternating_task
+        task=build_alternating_task(self.tf,self.proxy,72,
+            {'selector_epochs':3,'n_train':4,'batch_size':2,'learning_rate':.001,
+             'selector_bias':0.0,'selector_max_norm':.25})
+        np.testing.assert_array_equal(task.head.get_weights()[1],np.zeros(1))
+        task.selector_step(self.c,self.y)
+        self.assertLessEqual(float(np.linalg.norm(task.head.get_weights()[0])),.250001)
+
+    def test_full_component_count_does_not_add_trainable_parameters(self):
+        x=self.tf.zeros((2,145,72))
+        rebuilt,w=self.task.reconstruct(x)
+        self.assertEqual(tuple(rebuilt.shape),(2,72))
+        self.assertEqual(tuple(w.shape),(2,145,1))
+        self.assertEqual(self.task.head.count_params(),33)
+
 
 if __name__=='__main__':unittest.main()
