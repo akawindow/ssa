@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('smoke','pilot','tests','round02')][string]$Mode='smoke',
+    [ValidateSet('smoke','pilot','tests','round02','java_setup','java_verify','java_round','java_pilot')][string]$Mode='smoke',
     [string]$Python='',
     [string]$Out='',
     [switch]$FixedOnly
@@ -16,9 +16,12 @@ if (-not $Python) {
 Push-Location -LiteralPath $experimentRoot
 try {
     if ($Mode -eq 'tests') { & $Python -X utf8 -m unittest discover -s tests -v }
-    elseif ($Mode -eq 'round02') {
-        if ($FixedOnly) { throw 'round02 requires the learning stage' }
-        $roundArgs=@('-X','utf8','scripts/run_round02.py')
+    elseif ($Mode -in @('round02','java_setup','java_verify','java_round')) {
+        if ($FixedOnly) { throw 'Selected mode does not support -FixedOnly' }
+        $entryScript=@{'round02'='run_round02.py';'java_setup'='setup_java.py';'java_verify'='verify_java_srd.py';'java_round'='run_java_round.py'}[$Mode]
+        $roundArgs=@('-X','utf8',('scripts/'+$entryScript))
+        if ($Mode -eq 'java_setup') { $roundArgs+='--fetch' }
+        if ($Mode -in @('java_setup','java_verify') -and -not $Out) { $Out='runs/'+$Mode+'_'+(Get-Date -Format 'yyyyMMdd_HHmmss') }
         if ($Out) { $roundArgs+=@('--out',$Out) }
         & $Python @roundArgs
     }

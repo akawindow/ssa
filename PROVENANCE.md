@@ -21,11 +21,13 @@ Power Consumption of Tetouan City：Salam, A. & El Hibaoui, A. (2018), UCI。
 - 论文：Cleaning Time Series under Seasonal and Trend Constraints，https://doi.org/10.1145/3769773
 - 作者工程：https://github.com/czjthss/SeasonalClean
 - 核对入口：`code/src/main/java/Algorithm/SRD.java`、`Algorithm/util/Decomposition.java`。
-- 下载的源码仅用于本地只读核对，不执行，不放入本仓库提交，不声称已取得作者实现的再分发许可。
+- 最初两份源码用于本地核对；后续按用户授权下载并构建完整作者工程，在本地执行基线。作者源码、JAR和数据不放入本仓库提交，不声称已取得再分发许可。
 
 当前 Python 原型参考公开代码的规则描述独立编写：移动中位数趋势、常数边界延拓、同相位季节统计、残差均值/标准差阈值、同相位残差修复。没有使用原文的随机高斯修复。NumPy 的偶数样本中位数取中间两数均值；作者辅助类尚未逐项核对，因此不声称结果一致。
 
-本机未发现 Java/Javac/Maven，未进行与原始 Java 的数值对照。正式报告前必须补充一致性验证或明确将本方法作为有差别的替代实现。当前 SRD 相关实验只用于验证接口与训练流程。
+初期未在系统路径发现Java；后续在IDE安装目录发现完整JDK21和Maven3.9.9并按项目复用。新增Java后端固定作者提交 `84486b6c15e02f17ac32c80b827afb17e09802b9`，直接调用未修改的作者JAR；本项目自己的适配器源码位于 `java/SRDBridge.java`。
+
+作者smoke与Python批量接口的2000个输出逐点完全一致，作者原始源码受版本管理文件无修改；JAR和适配器均保存哈希。旧Python原型与作者输出存在实测差异，保持原型标签，不视为已完成移植校准。当前已跑通作者代码和小型基线，不代表完整复现论文所有表格，见 `docs/JAVA_SRD_RESULTS.md`。
 
 ## 任务训练与证据边界
 

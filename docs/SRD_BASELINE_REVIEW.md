@@ -2,6 +2,8 @@
 
 这是第二轮完成后的文献/实现核对，不是新增实验；不改写已有结果。
 
+后续完成情况：[原版Java基线与接入](JAVA_SRD_RESULTS.md)。已找到可复用本机工具链，跑通作者原样工程并完成逐点接口核验；以下差异是当时使用旧Python原型的核对记录，保留作历史说明。
+
 ## 原文实际报告了什么
 
 核对用户提供的《Cleaning Time Series under Seasonal and Trend Constraints》PDF 第 16–18 页：

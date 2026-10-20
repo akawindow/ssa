@@ -1,0 +1,637 @@
+{
+  "runs": 6,
+  "test_evaluation": false,
+  "runs_metadata": [
+    {
+      "condition": "reference",
+      "k": 3.0,
+      "code_commit": "704048b627b7b3edda671d864fc48940b32044f6",
+      "proxy_sha256": "d540e0415f408dcab3d08d3ebe24fcb09084b00745b7e66b176c5c1d122b9e5e",
+      "proxy_frozen": true,
+      "java": {
+        "author_url": "https://github.com/czjthss/SeasonalClean.git",
+        "author_commit": "84486b6c15e02f17ac32c80b827afb17e09802b9",
+        "author_jar_sha256": "6f863f4dce9cd539424dc81dd536edb8949a245665e0c1c7f6742474b80111c4",
+        "bridge_source_sha256": "1f7605e51a2f2370ac9b262e760c93e68754048f00a263ef5bc1d2765459cef6",
+        "bridge_class_sha256": "aad58209f4a52068e4061c8771379ab1c6150f74b7ba8db4f14701d63ed1fd9d",
+        "java_version": "openjdk version \"21.0.9\" 2025-10-21\nOpenJDK Runtime Environment JBR-21.0.9+1-1038.76-jcef (build 21.0.9+1-b1038.76)\nOpenJDK 64-Bit Server VM JBR-21.0.9+1-1038.76-jcef (build 21.0.9+1-b1038.76, mixed mode, sharing)",
+        "maven_version": "Apache Maven 3.9.9 (8e8579a9e76f7d015ee5ec7bfcdc97d260186937)\nMaven home: D:\\program\\IntelliJ IDEA 2025.2.5\\plugins\\maven\\lib\\maven3\nJava version: 21.0.9, vendor: JetBrains s.r.o., runtime: D:\\program\\IntelliJ IDEA 2025.2.5\\jbr\nDefault locale: zh_CN, platform encoding: UTF-8\nOS name: \"windows 11\", version: \"10.0\", arch: \"amd64\", family: \"windows\"",
+        "author_tracked_files_unchanged": true,
+        "adapter_verified_against_author_smoke": true
+      },
+      "java_batches": {
+        "srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 3.0,
+            "iterations": 5,
+            "input_sha256": "ee88c787405e725411f2972cb8143384017bfefcb5b213c8c503c0de02450615",
+            "output_sha256": "d7b5654c2c55d6547d9ee487d6b6dbeb0b43e07cf0f3622e58d9313819448495",
+            "process_seconds": 0.14304039999842644,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 3.0,
+            "iterations": 5,
+            "input_sha256": "cc3bd0d4743bacb5afaf8034449a4d8282e6c2dd92097356b8744442f4863e82",
+            "output_sha256": "dbadbc4cb01d9b7a7e58f873c35c0c2cd21823ceab557fc76b63fd5fe13d6582",
+            "process_seconds": 0.12239219999901252,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        },
+        "ssa_srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 3.0,
+            "iterations": 5,
+            "input_sha256": "f6da901162fdfa288b8136342e56bf2c68b4d068a849b30ffbae83880303b07b",
+            "output_sha256": "e45fd01373ec79ed2d294509b83657af9f9ce732f711adb83fd505f134322899",
+            "process_seconds": 0.15167279999877792,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 3.0,
+            "iterations": 5,
+            "input_sha256": "1354c31f5b8653918a30c9522403c972a927ef74b524d32aae90948db6e220aa",
+            "output_sha256": "e07521d8df16863fea973526ea73a0ad9cfb32b765e7480d6e478d93b1b19151",
+            "process_seconds": 0.12341899999955785,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        },
+        "task_ssa_srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 3.0,
+            "iterations": 5,
+            "input_sha256": "e35f0b3231603933cf95a18f9dc4aaf6374ea407707597dca86b24e44381244c",
+            "output_sha256": "c94e7faf46a69836bcfb237c48a950b9fbcaa605243fb769e731b2abe18ac658",
+            "process_seconds": 0.14213439999730326,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 3.0,
+            "iterations": 5,
+            "input_sha256": "df717d339e63af29bd263cb0a7c32f40a7ce7e95e645098cf6e1a5274f6c664a",
+            "output_sha256": "55b79309149648e76bf30b8604d26331e258049b08cfd1f5aa3c85899aa1ec04",
+            "process_seconds": 0.12169259999791393,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        }
+      },
+      "elapsed_seconds": 6.718029399999068
+    },
+    {
+      "condition": "reference",
+      "k": 6.0,
+      "code_commit": "704048b627b7b3edda671d864fc48940b32044f6",
+      "proxy_sha256": "d540e0415f408dcab3d08d3ebe24fcb09084b00745b7e66b176c5c1d122b9e5e",
+      "proxy_frozen": true,
+      "java": {
+        "author_url": "https://github.com/czjthss/SeasonalClean.git",
+        "author_commit": "84486b6c15e02f17ac32c80b827afb17e09802b9",
+        "author_jar_sha256": "6f863f4dce9cd539424dc81dd536edb8949a245665e0c1c7f6742474b80111c4",
+        "bridge_source_sha256": "1f7605e51a2f2370ac9b262e760c93e68754048f00a263ef5bc1d2765459cef6",
+        "bridge_class_sha256": "aad58209f4a52068e4061c8771379ab1c6150f74b7ba8db4f14701d63ed1fd9d",
+        "java_version": "openjdk version \"21.0.9\" 2025-10-21\nOpenJDK Runtime Environment JBR-21.0.9+1-1038.76-jcef (build 21.0.9+1-b1038.76)\nOpenJDK 64-Bit Server VM JBR-21.0.9+1-1038.76-jcef (build 21.0.9+1-b1038.76, mixed mode, sharing)",
+        "maven_version": "Apache Maven 3.9.9 (8e8579a9e76f7d015ee5ec7bfcdc97d260186937)\nMaven home: D:\\program\\IntelliJ IDEA 2025.2.5\\plugins\\maven\\lib\\maven3\nJava version: 21.0.9, vendor: JetBrains s.r.o., runtime: D:\\program\\IntelliJ IDEA 2025.2.5\\jbr\nDefault locale: zh_CN, platform encoding: UTF-8\nOS name: \"windows 11\", version: \"10.0\", arch: \"amd64\", family: \"windows\"",
+        "author_tracked_files_unchanged": true,
+        "adapter_verified_against_author_smoke": true
+      },
+      "java_batches": {
+        "srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 6.0,
+            "iterations": 5,
+            "input_sha256": "ee88c787405e725411f2972cb8143384017bfefcb5b213c8c503c0de02450615",
+            "output_sha256": "fac6f1e47b4fabcb73bdc9031a187f320f30c0c08f5ba2b1fe98f44ba4da9e82",
+            "process_seconds": 0.13917270000092685,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 6.0,
+            "iterations": 5,
+            "input_sha256": "cc3bd0d4743bacb5afaf8034449a4d8282e6c2dd92097356b8744442f4863e82",
+            "output_sha256": "cc3bd0d4743bacb5afaf8034449a4d8282e6c2dd92097356b8744442f4863e82",
+            "process_seconds": 0.12493320000066888,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        },
+        "ssa_srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 6.0,
+            "iterations": 5,
+            "input_sha256": "f6da901162fdfa288b8136342e56bf2c68b4d068a849b30ffbae83880303b07b",
+            "output_sha256": "f6da901162fdfa288b8136342e56bf2c68b4d068a849b30ffbae83880303b07b",
+            "process_seconds": 0.13560100000177044,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 6.0,
+            "iterations": 5,
+            "input_sha256": "1354c31f5b8653918a30c9522403c972a927ef74b524d32aae90948db6e220aa",
+            "output_sha256": "1354c31f5b8653918a30c9522403c972a927ef74b524d32aae90948db6e220aa",
+            "process_seconds": 0.09199680000165245,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        },
+        "task_ssa_srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 6.0,
+            "iterations": 5,
+            "input_sha256": "e35f0b3231603933cf95a18f9dc4aaf6374ea407707597dca86b24e44381244c",
+            "output_sha256": "bc345566bdee03c84175dfaae295d1f6eb4feb3cd9ebf041c6d1c6f5a7dc1717",
+            "process_seconds": 0.13278010000067297,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 6.0,
+            "iterations": 5,
+            "input_sha256": "df717d339e63af29bd263cb0a7c32f40a7ce7e95e645098cf6e1a5274f6c664a",
+            "output_sha256": "df717d339e63af29bd263cb0a7c32f40a7ce7e95e645098cf6e1a5274f6c664a",
+            "process_seconds": 0.08921939999709139,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        }
+      },
+      "elapsed_seconds": 6.189788800002134
+    },
+    {
+      "condition": "reference",
+      "k": 9.0,
+      "code_commit": "704048b627b7b3edda671d864fc48940b32044f6",
+      "proxy_sha256": "d540e0415f408dcab3d08d3ebe24fcb09084b00745b7e66b176c5c1d122b9e5e",
+      "proxy_frozen": true,
+      "java": {
+        "author_url": "https://github.com/czjthss/SeasonalClean.git",
+        "author_commit": "84486b6c15e02f17ac32c80b827afb17e09802b9",
+        "author_jar_sha256": "6f863f4dce9cd539424dc81dd536edb8949a245665e0c1c7f6742474b80111c4",
+        "bridge_source_sha256": "1f7605e51a2f2370ac9b262e760c93e68754048f00a263ef5bc1d2765459cef6",
+        "bridge_class_sha256": "aad58209f4a52068e4061c8771379ab1c6150f74b7ba8db4f14701d63ed1fd9d",
+        "java_version": "openjdk version \"21.0.9\" 2025-10-21\nOpenJDK Runtime Environment JBR-21.0.9+1-1038.76-jcef (build 21.0.9+1-b1038.76)\nOpenJDK 64-Bit Server VM JBR-21.0.9+1-1038.76-jcef (build 21.0.9+1-b1038.76, mixed mode, sharing)",
+        "maven_version": "Apache Maven 3.9.9 (8e8579a9e76f7d015ee5ec7bfcdc97d260186937)\nMaven home: D:\\program\\IntelliJ IDEA 2025.2.5\\plugins\\maven\\lib\\maven3\nJava version: 21.0.9, vendor: JetBrains s.r.o., runtime: D:\\program\\IntelliJ IDEA 2025.2.5\\jbr\nDefault locale: zh_CN, platform encoding: UTF-8\nOS name: \"windows 11\", version: \"10.0\", arch: \"amd64\", family: \"windows\"",
+        "author_tracked_files_unchanged": true,
+        "adapter_verified_against_author_smoke": true
+      },
+      "java_batches": {
+        "srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 9.0,
+            "iterations": 5,
+            "input_sha256": "ee88c787405e725411f2972cb8143384017bfefcb5b213c8c503c0de02450615",
+            "output_sha256": "ee88c787405e725411f2972cb8143384017bfefcb5b213c8c503c0de02450615",
+            "process_seconds": 0.13420659999974305,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 9.0,
+            "iterations": 5,
+            "input_sha256": "cc3bd0d4743bacb5afaf8034449a4d8282e6c2dd92097356b8744442f4863e82",
+            "output_sha256": "cc3bd0d4743bacb5afaf8034449a4d8282e6c2dd92097356b8744442f4863e82",
+            "process_seconds": 0.09109760000137612,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        },
+        "ssa_srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 9.0,
+            "iterations": 5,
+            "input_sha256": "f6da901162fdfa288b8136342e56bf2c68b4d068a849b30ffbae83880303b07b",
+            "output_sha256": "f6da901162fdfa288b8136342e56bf2c68b4d068a849b30ffbae83880303b07b",
+            "process_seconds": 0.12203469999803929,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 9.0,
+            "iterations": 5,
+            "input_sha256": "1354c31f5b8653918a30c9522403c972a927ef74b524d32aae90948db6e220aa",
+            "output_sha256": "1354c31f5b8653918a30c9522403c972a927ef74b524d32aae90948db6e220aa",
+            "process_seconds": 0.1271123999977135,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        },
+        "task_ssa_srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 9.0,
+            "iterations": 5,
+            "input_sha256": "e35f0b3231603933cf95a18f9dc4aaf6374ea407707597dca86b24e44381244c",
+            "output_sha256": "e35f0b3231603933cf95a18f9dc4aaf6374ea407707597dca86b24e44381244c",
+            "process_seconds": 0.12589830000069924,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 9.0,
+            "iterations": 5,
+            "input_sha256": "df717d339e63af29bd263cb0a7c32f40a7ce7e95e645098cf6e1a5274f6c664a",
+            "output_sha256": "df717d339e63af29bd263cb0a7c32f40a7ce7e95e645098cf6e1a5274f6c664a",
+            "process_seconds": 0.09346169999844278,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        }
+      },
+      "elapsed_seconds": 6.21284630000082
+    },
+    {
+      "condition": "mixed",
+      "k": 3.0,
+      "code_commit": "704048b627b7b3edda671d864fc48940b32044f6",
+      "proxy_sha256": "d540e0415f408dcab3d08d3ebe24fcb09084b00745b7e66b176c5c1d122b9e5e",
+      "proxy_frozen": true,
+      "java": {
+        "author_url": "https://github.com/czjthss/SeasonalClean.git",
+        "author_commit": "84486b6c15e02f17ac32c80b827afb17e09802b9",
+        "author_jar_sha256": "6f863f4dce9cd539424dc81dd536edb8949a245665e0c1c7f6742474b80111c4",
+        "bridge_source_sha256": "1f7605e51a2f2370ac9b262e760c93e68754048f00a263ef5bc1d2765459cef6",
+        "bridge_class_sha256": "aad58209f4a52068e4061c8771379ab1c6150f74b7ba8db4f14701d63ed1fd9d",
+        "java_version": "openjdk version \"21.0.9\" 2025-10-21\nOpenJDK Runtime Environment JBR-21.0.9+1-1038.76-jcef (build 21.0.9+1-b1038.76)\nOpenJDK 64-Bit Server VM JBR-21.0.9+1-1038.76-jcef (build 21.0.9+1-b1038.76, mixed mode, sharing)",
+        "maven_version": "Apache Maven 3.9.9 (8e8579a9e76f7d015ee5ec7bfcdc97d260186937)\nMaven home: D:\\program\\IntelliJ IDEA 2025.2.5\\plugins\\maven\\lib\\maven3\nJava version: 21.0.9, vendor: JetBrains s.r.o., runtime: D:\\program\\IntelliJ IDEA 2025.2.5\\jbr\nDefault locale: zh_CN, platform encoding: UTF-8\nOS name: \"windows 11\", version: \"10.0\", arch: \"amd64\", family: \"windows\"",
+        "author_tracked_files_unchanged": true,
+        "adapter_verified_against_author_smoke": true
+      },
+      "java_batches": {
+        "srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 3.0,
+            "iterations": 5,
+            "input_sha256": "02bea83e148df84550906386e037050e2292bcd095a1e06a52ba1b5a1b7794b5",
+            "output_sha256": "4da29b3cee3bcb47fdaf9f273a8a6af70525150159f9dfdb65b538c083b85390",
+            "process_seconds": 0.14542330000040238,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 3.0,
+            "iterations": 5,
+            "input_sha256": "903566d9637bfea2176a5f9634ba3b5c264e29e881903f4a9086f9179f2c46b8",
+            "output_sha256": "0450444fdf72fb31f2a5187e340ed49010d612bf15962490a9083e796a577e5f",
+            "process_seconds": 0.12196959999710089,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        },
+        "ssa_srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 3.0,
+            "iterations": 5,
+            "input_sha256": "2d36615111761f4d760cf6322b5cf3f917713b8ed0161ab6d1b40876371ec3e6",
+            "output_sha256": "d2b9c91078089963ecaeb02101aecf120bd793fd42536e852cd55206a9df35c0",
+            "process_seconds": 0.13690169999972568,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 3.0,
+            "iterations": 5,
+            "input_sha256": "4dbba6ae16b949a16733b4adcb1a71aa53373c16ab688f9bbef775f0028c96d8",
+            "output_sha256": "d8ca1744468d74bbfc2fd0f09dd28b9c8da527aa208abe2dc388b3788e36d16c",
+            "process_seconds": 0.12309370000002673,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        },
+        "task_ssa_srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 3.0,
+            "iterations": 5,
+            "input_sha256": "b4f4ce957462d52d649e2653fcd477857fee9eb26b3a50c2eb29884ae28ee36f",
+            "output_sha256": "099431f827036adaa9472a0c11c0cc615f58779ae0fc6a5ed8c3227523218783",
+            "process_seconds": 0.13404880000234698,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 3.0,
+            "iterations": 5,
+            "input_sha256": "0b626039b12482c8ac3e4eea2a0c6f3f005d7c65810ff054b7ac7e86504ab7be",
+            "output_sha256": "66be7fbfd16aec17a5754900140bc15f35ace27f622c0ca72849773be637190a",
+            "process_seconds": 0.12475610000183224,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        }
+      },
+      "elapsed_seconds": 6.239067499998782
+    },
+    {
+      "condition": "mixed",
+      "k": 6.0,
+      "code_commit": "704048b627b7b3edda671d864fc48940b32044f6",
+      "proxy_sha256": "d540e0415f408dcab3d08d3ebe24fcb09084b00745b7e66b176c5c1d122b9e5e",
+      "proxy_frozen": true,
+      "java": {
+        "author_url": "https://github.com/czjthss/SeasonalClean.git",
+        "author_commit": "84486b6c15e02f17ac32c80b827afb17e09802b9",
+        "author_jar_sha256": "6f863f4dce9cd539424dc81dd536edb8949a245665e0c1c7f6742474b80111c4",
+        "bridge_source_sha256": "1f7605e51a2f2370ac9b262e760c93e68754048f00a263ef5bc1d2765459cef6",
+        "bridge_class_sha256": "aad58209f4a52068e4061c8771379ab1c6150f74b7ba8db4f14701d63ed1fd9d",
+        "java_version": "openjdk version \"21.0.9\" 2025-10-21\nOpenJDK Runtime Environment JBR-21.0.9+1-1038.76-jcef (build 21.0.9+1-b1038.76)\nOpenJDK 64-Bit Server VM JBR-21.0.9+1-1038.76-jcef (build 21.0.9+1-b1038.76, mixed mode, sharing)",
+        "maven_version": "Apache Maven 3.9.9 (8e8579a9e76f7d015ee5ec7bfcdc97d260186937)\nMaven home: D:\\program\\IntelliJ IDEA 2025.2.5\\plugins\\maven\\lib\\maven3\nJava version: 21.0.9, vendor: JetBrains s.r.o., runtime: D:\\program\\IntelliJ IDEA 2025.2.5\\jbr\nDefault locale: zh_CN, platform encoding: UTF-8\nOS name: \"windows 11\", version: \"10.0\", arch: \"amd64\", family: \"windows\"",
+        "author_tracked_files_unchanged": true,
+        "adapter_verified_against_author_smoke": true
+      },
+      "java_batches": {
+        "srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 6.0,
+            "iterations": 5,
+            "input_sha256": "02bea83e148df84550906386e037050e2292bcd095a1e06a52ba1b5a1b7794b5",
+            "output_sha256": "685139bd7b8cfdcec4b893f25d9bdbec99a21a54ac0ae6d5fc8d23b5300f37f6",
+            "process_seconds": 0.14340679999804706,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 6.0,
+            "iterations": 5,
+            "input_sha256": "903566d9637bfea2176a5f9634ba3b5c264e29e881903f4a9086f9179f2c46b8",
+            "output_sha256": "c6bb89d95e1da1e8f53060a4acf502e4233f054905bccc4f0cad28e9d1e09a19",
+            "process_seconds": 0.12694960000226274,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        },
+        "ssa_srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 6.0,
+            "iterations": 5,
+            "input_sha256": "2d36615111761f4d760cf6322b5cf3f917713b8ed0161ab6d1b40876371ec3e6",
+            "output_sha256": "2d36615111761f4d760cf6322b5cf3f917713b8ed0161ab6d1b40876371ec3e6",
+            "process_seconds": 0.13596550000147545,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 6.0,
+            "iterations": 5,
+            "input_sha256": "4dbba6ae16b949a16733b4adcb1a71aa53373c16ab688f9bbef775f0028c96d8",
+            "output_sha256": "4dbba6ae16b949a16733b4adcb1a71aa53373c16ab688f9bbef775f0028c96d8",
+            "process_seconds": 0.08813780000127736,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        },
+        "task_ssa_srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 6.0,
+            "iterations": 5,
+            "input_sha256": "b4f4ce957462d52d649e2653fcd477857fee9eb26b3a50c2eb29884ae28ee36f",
+            "output_sha256": "2427a4ab467095a7ca2189489f4f972c4f2c9ec9022feac706f6d54824006bc3",
+            "process_seconds": 0.13662960000146995,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 6.0,
+            "iterations": 5,
+            "input_sha256": "0b626039b12482c8ac3e4eea2a0c6f3f005d7c65810ff054b7ac7e86504ab7be",
+            "output_sha256": "9e325eae572b004a63cecdf81a4a0f6255989bfb664612f25b388684be5d8005",
+            "process_seconds": 0.12380970000231173,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        }
+      },
+      "elapsed_seconds": 6.22413349999988
+    },
+    {
+      "condition": "mixed",
+      "k": 9.0,
+      "code_commit": "704048b627b7b3edda671d864fc48940b32044f6",
+      "proxy_sha256": "d540e0415f408dcab3d08d3ebe24fcb09084b00745b7e66b176c5c1d122b9e5e",
+      "proxy_frozen": true,
+      "java": {
+        "author_url": "https://github.com/czjthss/SeasonalClean.git",
+        "author_commit": "84486b6c15e02f17ac32c80b827afb17e09802b9",
+        "author_jar_sha256": "6f863f4dce9cd539424dc81dd536edb8949a245665e0c1c7f6742474b80111c4",
+        "bridge_source_sha256": "1f7605e51a2f2370ac9b262e760c93e68754048f00a263ef5bc1d2765459cef6",
+        "bridge_class_sha256": "aad58209f4a52068e4061c8771379ab1c6150f74b7ba8db4f14701d63ed1fd9d",
+        "java_version": "openjdk version \"21.0.9\" 2025-10-21\nOpenJDK Runtime Environment JBR-21.0.9+1-1038.76-jcef (build 21.0.9+1-b1038.76)\nOpenJDK 64-Bit Server VM JBR-21.0.9+1-1038.76-jcef (build 21.0.9+1-b1038.76, mixed mode, sharing)",
+        "maven_version": "Apache Maven 3.9.9 (8e8579a9e76f7d015ee5ec7bfcdc97d260186937)\nMaven home: D:\\program\\IntelliJ IDEA 2025.2.5\\plugins\\maven\\lib\\maven3\nJava version: 21.0.9, vendor: JetBrains s.r.o., runtime: D:\\program\\IntelliJ IDEA 2025.2.5\\jbr\nDefault locale: zh_CN, platform encoding: UTF-8\nOS name: \"windows 11\", version: \"10.0\", arch: \"amd64\", family: \"windows\"",
+        "author_tracked_files_unchanged": true,
+        "adapter_verified_against_author_smoke": true
+      },
+      "java_batches": {
+        "srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 9.0,
+            "iterations": 5,
+            "input_sha256": "02bea83e148df84550906386e037050e2292bcd095a1e06a52ba1b5a1b7794b5",
+            "output_sha256": "207fb321b6af564b8c601ad48c48b5d161a1e38f3a4d510464cdd37c63f1c74f",
+            "process_seconds": 0.12034789999961504,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 9.0,
+            "iterations": 5,
+            "input_sha256": "903566d9637bfea2176a5f9634ba3b5c264e29e881903f4a9086f9179f2c46b8",
+            "output_sha256": "e62673fd4f958bcad987fca4f045d457d21d4ff13c6aa118b6fbcd4878741b10",
+            "process_seconds": 0.12545710000267718,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        },
+        "ssa_srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 9.0,
+            "iterations": 5,
+            "input_sha256": "2d36615111761f4d760cf6322b5cf3f917713b8ed0161ab6d1b40876371ec3e6",
+            "output_sha256": "2d36615111761f4d760cf6322b5cf3f917713b8ed0161ab6d1b40876371ec3e6",
+            "process_seconds": 0.1180595000005269,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 9.0,
+            "iterations": 5,
+            "input_sha256": "4dbba6ae16b949a16733b4adcb1a71aa53373c16ab688f9bbef775f0028c96d8",
+            "output_sha256": "4dbba6ae16b949a16733b4adcb1a71aa53373c16ab688f9bbef775f0028c96d8",
+            "process_seconds": 0.12469100000089384,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        },
+        "task_ssa_srd_java": {
+          "train": {
+            "windows": 36,
+            "length": 432,
+            "period": 144,
+            "k": 9.0,
+            "iterations": 5,
+            "input_sha256": "b4f4ce957462d52d649e2653fcd477857fee9eb26b3a50c2eb29884ae28ee36f",
+            "output_sha256": "1fa86589663fe3cccf357cc495c2bcfa8ef6977d5c9be93153ed0c81d4a76ff4",
+            "process_seconds": 0.13326470000174595,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          },
+          "val": {
+            "windows": 12,
+            "length": 432,
+            "period": 144,
+            "k": 9.0,
+            "iterations": 5,
+            "input_sha256": "0b626039b12482c8ac3e4eea2a0c6f3f005d7c65810ff054b7ac7e86504ab7be",
+            "output_sha256": "47bb64d8a08f7f8443044348c37b4a76eda93d7e1c92b4e8a113d1a69700940f",
+            "process_seconds": 0.12652739999975893,
+            "author_srd_called_per_window": true,
+            "window_concatenation": false,
+            "additional_scaling_in_bridge": false
+          }
+        }
+      },
+      "elapsed_seconds": 6.166722499998286
+    }
+  ],
+  "scope": "One training seed, three declared thresholds, two input conditions; not a complete SRD paper reproduction"
+}
