@@ -1,0 +1,10 @@
+{
+  "dataset": "synthetic", "seed": 42, "period": 24,
+  "history": 72, "horizon": 24, "stride": 24,
+  "embedding": 24, "rank": 6,
+  "max_train": 24, "max_val": 8, "max_test": 8,
+  "noise_std": 0.10, "outlier_rate": 0.003, "outlier_scale": 3.0, "outlier_length": 3,
+  "srd_k": 3.0, "srd_iterations": 5,
+  "ridge_alpha": 1.0, "proxy_epochs": 20, "selector_epochs": 15,
+  "batch_size": 8, "patience": 5, "learning_rate": 0.001
+}
