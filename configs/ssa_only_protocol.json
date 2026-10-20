@@ -11,6 +11,8 @@
   "ablation": "One group removed at a time from six elementary components plus exact residual; keep all other groups",
   "positive_controls": ["All components including exact residual reproduce input", "Full rank 144 reproduces input up to numerical error", "Drop residual after six equals fixed rank six"],
   "evaluation_splits": ["val"],
+  "ridge_solver": "cholesky",
+  "numerical_correction": "After the initial full-rank identity control failed under default LSQR tolerance, all SSA-only readouts use direct Cholesky; retain initial logs and audit both solvers. Neural parameters are unchanged.",
   "scope": "SSA input reconstruction before independent Ridge, not SSA recurrent forecasting",
   "selection_rule": "Report every prespecified rank and deletion; exploratory validation minimum is not a final tuned method",
   "no_clean_ground_truth": "Report input-change RMS as modification magnitude, not denoising accuracy"

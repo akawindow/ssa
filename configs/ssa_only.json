@@ -15,6 +15,7 @@
   "max_train": 36,
   "max_val": 12,
   "ridge_alpha": 1.0,
+  "ridge_solver": "cholesky",
   "proxy_epochs": 25,
   "selector_epochs": 15,
   "batch_size": 8,

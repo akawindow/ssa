@@ -39,5 +39,15 @@ class OriginalObservationSSAChecks(unittest.TestCase):
             np.testing.assert_allclose(variants[f'drop_C{i+1}'],remaining,atol=1e-12)
         np.testing.assert_array_equal(full,before)
 
+    def test_direct_ridge_readout_preserves_full_rank_identity(self):
+        from sklearn.linear_model import Ridge
+        rng=np.random.default_rng(3)
+        x=rng.normal(size=(12,72));y=rng.normal(size=(12,24))
+        components=np.array([decompose(a,24,24) for a in x])
+        full=components[:,:-1,:].sum(axis=1)
+        raw_model=Ridge(alpha=1,solver='cholesky').fit(x[:8],y[:8])
+        full_model=Ridge(alpha=1,solver='cholesky').fit(full[:8],y[:8])
+        np.testing.assert_allclose(raw_model.predict(x[8:]),full_model.predict(full[8:]),atol=1e-10,rtol=0)
+
 
 if __name__=='__main__':unittest.main()

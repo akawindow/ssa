@@ -43,7 +43,7 @@ def main():
         np.testing.assert_array_equal(variants[split]['drop_residual_after_6'],variants[split]['ssa_rank_6'])
     rows=[];per_window=[];predictions={}
     for name in variants['train']:
-        model=Ridge(alpha=config['ridge_alpha'],solver='lsqr').fit(variants['train'][name],windows['train']['y'])
+        model=Ridge(alpha=config['ridge_alpha'],solver=config['ridge_solver']).fit(variants['train'][name],windows['train']['y'])
         prediction=model.predict(variants['val'][name]);predictions[name]=prediction
         score=metrics(prediction,windows['val']['y'],std)
         delta=variants['val'][name]-windows['val']['x']
@@ -62,6 +62,18 @@ def main():
     frame['rmse_minus_raw']=frame.forecast_rmse_original-baseline
     frame.to_csv(out/'static_metrics.csv',index=False)
     pd.DataFrame(per_window).to_csv(out/'per_window_metrics.csv',index=False)
+    numerical=[]
+    for solver,tol in [('lsqr',1e-4),('lsqr',1e-12),('cholesky',1e-4)]:
+        pair={}
+        for name in ['raw','ssa_rank_144']:
+            model=Ridge(alpha=config['ridge_alpha'],solver=solver,tol=tol).fit(variants['train'][name],windows['train']['y'])
+            pair[name]=model.predict(variants['val'][name])
+        numerical.append({'solver':solver,'tol':tol,
+            'raw_rmse_original':metrics(pair['raw'],windows['val']['y'],std)['rmse'],
+            'full_rank_rmse_original':metrics(pair['ssa_rank_144'],windows['val']['y'],std)['rmse'],
+            'max_full_vs_raw_prediction_difference_original':float(np.abs(pair['raw']-pair['ssa_rank_144']).max()*std),
+            'raw_max_prediction_difference_vs_direct':float(np.abs(pair['raw']-predictions['raw']).max()*std)})
+    pd.DataFrame(numerical).to_csv(out/'numerical_audit.csv',index=False)
     audit.update({'boundaries':boundaries,'scale_mean':mean,'scale_std':std,'scaler_fit_range':[0,train_end],
         'window_counts':{k:len(v['x']) for k,v in windows.items()},'sampled_origins':{k:v['origins'].tolist() for k,v in windows.items()},
         'target_ranges':{k:[[int(o),int(o+config['horizon'])] for o in v['origins']] for k,v in windows.items()},

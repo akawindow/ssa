@@ -182,7 +182,7 @@ def run(config, root, out, task_driven=True):
     rows=[]
     for name,inputs in variants.items():
         print(f'Evaluating independent ridge forecaster: {name}',flush=True)
-        model=Ridge(alpha=config['ridge_alpha'],solver='lsqr')
+        model=Ridge(alpha=config['ridge_alpha'],solver=config.get('ridge_solver','lsqr'))
         model.fit(inputs['train'],windows['train']['y'])
         for split in config.get('evaluation_splits',['val','test']):
             prediction=model.predict(inputs[split])
@@ -211,6 +211,7 @@ def run(config, root, out, task_driven=True):
             else 'Frozen proxy supervises selector')+(' BEFORE repair; no backprop through repair' if repair_enabled else
             '; SSA only, repair disabled')),
         'forecaster':'Independent Ridge, refit per method with the same alpha',
+        'ridge_solver':config.get('ridge_solver','lsqr'),
         'evaluation_splits':config.get('evaluation_splits',['val','test']),
         'test_windows_constructed':'test' in windows,
         'selector_mode':config.get('selector_mode','raw_conv'),
