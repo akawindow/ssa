@@ -31,6 +31,6 @@ Power Consumption of Tetouan City：Salam, A. & El Hibaoui, A. (2018), UCI。
 
 ## 任务训练与证据边界
 
-本工程提出的组合尚未验证新颖性。固定代理 F 的梯度用于训练选择器，SRD 不在反向传播路径中。最终 H 是独立拟合的 Ridge，与代理 MLP 结构不同。第二轮增加了 3 个训练种子，但仍只有一种人工污染实现、一个数据集、小窗口子集和一个最终预测器，不能宣称具有普遍插件能力。
+本工程提出的组合尚未验证新颖性。旧版本固定代理F监督选择器；第四轮新增TASK式交替更新，选择器阶段只更新权重头，代理阶段同时更新共享任务特征。两类模式都不通过SRD反向传播。最终H是独立拟合的Ridge，与代理MLP结构不同。虽已增加3个训练种子，仍只有一种人工污染实现、一个数据集、小窗口子集和一个最终预测器，不能宣称具有普遍插件能力。
 
-第二轮的共享任务特征及简单选择头借鉴你本地 TASK 工程 `base_classes.py`、`base_models.py` 的结构思路，来源：https://github.com/leizheng2005/Task-Oriented_Learning_for_Automatic_EEG_Denoising 。本工程的单变量预测模型和训练实现独立编写，没有再分发 TASK 源码或权重；TASK 本地代码采用交替训练，本轮仍使用固定代理，不能称为完整 TASK 复现。
+共享任务特征、简单选择头与第四轮协同机制借鉴你本地TASK工程 `base_classes.py`、`base_models.py` 的结构和训练顺序，来源：https://github.com/leizheng2005/Task-Oriented_Learning_for_Automatic_EEG_Denoising 。本工程的单变量预测模型和训练实现独立编写，没有再分发TASK源码或权重。第四轮迁移了交替优化核心，但数据、网络、任务损失及部分稳定化设置不同，不能称为完整EEG TASK复现。详见 `docs/COLLABORATIVE_RESULTS.md`。

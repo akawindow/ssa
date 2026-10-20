@@ -1,0 +1,5 @@
+condition,method,comparison,paired_rmse_mean,paired_rmse_sample_std,wins_out_of_3,paired_differences
+reference,task_ssa,collaborative minus matched frozen,-7.102596249373467,21.125668610590765,1,"[-31.4794416621462, 5.873817596452682, 4.297835317573117]"
+reference,task_ssa_srd_java,collaborative minus matched frozen,-7.829469960133186,20.628459231310824,1,"[-31.646950851369184, 3.798141948052489, 4.360399022917136]"
+mixed,task_ssa,collaborative minus matched frozen,0.991763871389594,1.2737017155475605,1,"[-0.13937736398565903, 0.7432671150754686, 2.3714018630789724]"
+mixed,task_ssa_srd_java,collaborative minus matched frozen,0.703198999579854,5.56734845998118,2,"[6.873381948459155, -3.9445826738033247, -0.8192022759162683]"
