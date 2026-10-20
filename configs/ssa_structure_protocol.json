@@ -1,0 +1,21 @@
+{
+  "base_config": "configs/ssa_only.json",
+  "scope": "Training histories only; descriptive structure diagnosis, no forecasting evaluation or neural training",
+  "embedding": 144,
+  "display_components": 12,
+  "pair_search_components": 24,
+  "existing_cutoff": 6,
+  "example_indices": "First, lower-middle, last of the existing 36 training histories",
+  "periodogram": "Boxcar periodogram after subtracting each series mean; no zero padding",
+  "daily_harmonics_cycles_per_day": [1, 2, 3],
+  "candidate_pair_thresholds": {
+    "min_absolute_wcor": 0.8,
+    "max_relative_singular_value_gap": 0.2,
+    "require_same_positive_peak_bin": true
+  },
+  "pair_interpretation": "Descriptive candidate only, not a noise label, physical source separation or validated grouping algorithm",
+  "no_selection_from_forecast_scores": true,
+  "no_artificial_corruption": true,
+  "no_repair": true,
+  "no_validation_or_test_windows": true
+}
