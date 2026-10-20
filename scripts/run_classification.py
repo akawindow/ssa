@@ -25,9 +25,20 @@ def write_json(path, value):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--out', default='runs/classification_'+datetime.now().strftime('%Y%m%d_%H%M%S'))
+    parser.add_argument('--protocol', default='configs/classification_protocol.json')
     args = parser.parse_args(); root = Path(__file__).resolve().parents[1]
     out = root/args.out; out.mkdir(parents=True, exist_ok=False); start = time.perf_counter()
-    cfg = json.loads((root/'configs/classification_protocol.json').read_text(encoding='utf-8'))
+    cfg = json.loads((root/args.protocol).read_text(encoding='utf-8'))
+    pretrained_run = root/cfg['pretrained_from'] if cfg.get('pretrained_from') else None
+    original_hashes = {}
+    if pretrained_run is not None:
+        original_hashes = {str(p.relative_to(pretrained_run)): hashlib.sha256(p.read_bytes()).hexdigest()
+                           for p in pretrained_run.rglob('*') if p.is_file()}
+        source_cfg = json.loads((pretrained_run/'protocol.json').read_text())
+        for key, value in source_cfg.items():
+            if key not in ['collaborative_epochs', 'budget', 'stop_rule', 'scope']:
+                assert cfg[key] == value, f'Unexpected protocol change: {key}'
+        assert cfg['schedule_epochs'] == source_cfg['collaborative_epochs']
     write_json(out/'protocol.json', cfg)
     source = root/'data/forda/FordA_TRAIN.tsv'
     if not source.exists():
@@ -78,15 +89,30 @@ def main():
         'cache': str(cache.relative_to(root)), 'cache_signature': cache_hash,
         'fixed_ssa_rank_by_split': {k: {'min': int(ranks[v].min()), 'median': float(np.median(ranks[v])),
                                        'max': int(ranks[v].max())} for k, v in split.items()}}
+    audit['assessment_previously_explored'] = bool(cfg.get('assessment_previously_explored', False))
     write_json(out/'data_audit.json', audit)
+    if pretrained_run is not None:
+        prior_audit = json.loads((pretrained_run/'data_audit.json').read_text())
+        for key in ['sha256', 'indices', 'counts', 'class_counts', 'scale_mean', 'scale_std', 'embedding']:
+            assert audit[key] == prior_audit[key], f'Data role changed: {key}'
     np.savez_compressed(out/'samples.npz', **{k: v for k, v in split.items()}, labels=labels, fixed_ranks=ranks)
     print('Data roles:', audit['counts'], 'class counts:', audit['class_counts'], flush=True)
     manifests = []; audits = []
     for seed in cfg['seeds']:
         tf = tensorflow(seed); tf.keras.backend.clear_session()
         base = build_classifier(tf, cfg['length']); tick = time.perf_counter()
-        print(f'Pretraining seed={seed}', flush=True)
-        training = pretrain(tf, base, x[split['fit']], labels[split['fit']], x[split['selection']], labels[split['selection']], cfg, seed)
+        print(f'Preparing common pretrained model seed={seed}', flush=True)
+        if pretrained_run is None:
+            training = pretrain(tf, base, x[split['fit']], labels[split['fit']], x[split['selection']], labels[split['selection']], cfg, seed)
+        else:
+            prior = pretrained_run/f'raw_pretrained_seed{seed}'
+            base.load_weights(str(prior/'proxy.weights.h5'))
+            training = json.loads((prior/'training.json').read_text())
+            assert weight_digest(base.get_weights()) == training['initial_for_branches_sha256']
+            np.testing.assert_allclose(scores(predict(base, None, x[split['selection']]), labels[split['selection']])['cross_entropy'],
+                training['best_selection_cross_entropy'], atol=1e-7)
+            training.update(reused_pretraining=True, reused_from=str(prior.relative_to(root)),
+                reused_checkpoint_sha256=hashlib.sha256((prior/'proxy.weights.h5').read_bytes()).hexdigest())
         initial = base.get_weights(); initial_hash = weight_digest(initial)
         folder = out/f'raw_pretrained_seed{seed}'; folder.mkdir()
         base.save_weights(str(folder/'proxy.weights.h5'))
@@ -98,10 +124,25 @@ def main():
             tf.keras.backend.clear_session(); proxy = build_classifier(tf, cfg['length']); proxy.set_weights(initial)
             tick = time.perf_counter(); print(f'Training seed={seed} branch={branch}', flush=True)
             a = inputs[branch]
-            gate, training = train_branch(tf, proxy, branch, a[split['fit']], labels[split['fit']],
-                a[split['selection']], labels[split['selection']], cfg, seed)
-            assert training['initial_proxy_sha256'] == initial_hash
             folder = out/f'{branch}_seed{seed}'; folder.mkdir()
+            def snapshot(record, best_proxy, best_gate, last_proxy, last_gate):
+                payload = {f'proxy_w{i}': v for i, v in enumerate(best_proxy)}
+                payload.update({f'gate_w{i}': v for i, v in enumerate(best_gate)})
+                np.savez_compressed(folder/f'epoch{record["epoch"]}_best.npz', **payload)
+                if record['epoch'] == cfg['collaborative_epochs']:
+                    payload = {f'proxy_w{i}': v for i, v in enumerate(last_proxy)}
+                    payload.update({f'gate_w{i}': v for i, v in enumerate(last_gate)})
+                    np.savez_compressed(folder/f'epoch{record["epoch"]}_last.npz', **payload)
+                if pretrained_run is not None and record['epoch'] == source_cfg['collaborative_epochs']:
+                    old = json.loads((pretrained_run/f'{branch}_seed{seed}'/'training.json').read_text())
+                    for new_key, old_key in [('best_proxy_sha256', 'final_proxy_sha256'), ('best_head_sha256', 'final_head_sha256'),
+                        ('batch_order_prefix_sha256', 'batch_order_sha256')]:
+                        assert record[new_key] == old[old_key], f'First ten epochs not reproduced: {seed} {branch} {new_key}'
+                    np.testing.assert_allclose(record['best_selection_cross_entropy'], old['best_selection_cross_entropy'], atol=1e-10)
+                    record['old_ten_epoch_best_exactly_reproduced'] = True
+            gate, training = train_branch(tf, proxy, branch, a[split['fit']], labels[split['fit']],
+                a[split['selection']], labels[split['selection']], cfg, seed, snapshot_callback=snapshot)
+            assert training['initial_proxy_sha256'] == initial_hash
             proxy.save_weights(str(folder/'proxy.weights.h5'))
             if gate:
                 np.savez_compressed(folder/'gate.npz', **{f'w{i}': v for i, v in enumerate(gate.weights())})
@@ -174,6 +215,11 @@ def main():
         'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip(),
         'elapsed_seconds': time.perf_counter()-start, 'tensorflow': tf.__version__, 'numpy': np.__version__,
         'completed_models': len(manifests), 'scope': cfg['scope']})
+    if pretrained_run is not None:
+        assert all(hashlib.sha256((pretrained_run/p).read_bytes()).hexdigest() == digest for p, digest in original_hashes.items())
+        write_json(out/'source_run_unchanged.json', {'source': str(pretrained_run.relative_to(root)),
+            'files_checked': len(original_hashes), 'all_original_files_unchanged': True,
+            'pretraining_reused': True, 'first_ten_epoch_prefix_exactly_checked_for_all_branches': True})
     print(summary.loc['assessment'].to_string(), flush=True)
     print('Classification pilot finished; official TEST remains unopened.', flush=True)
 

@@ -55,7 +55,7 @@ def scores(logits, labels):
 
 
 def make_optimizer(tf, cfg, n):
-    steps = cfg['collaborative_epochs']*int(np.ceil(n/cfg['batch_size']))
+    steps = cfg.get('schedule_epochs', cfg['collaborative_epochs'])*int(np.ceil(n/cfg['batch_size']))
     schedule = tf.keras.optimizers.schedules.CosineDecay(cfg['learning_rate'], steps, alpha=.9)
     return tf.keras.optimizers.AdamW(schedule, weight_decay=.004, amsgrad=True)
 
@@ -154,7 +154,7 @@ def pretrain(tf, proxy, fit_x, fit_y, selection_x, selection_y, cfg, seed):
             'classifier_optimizer_steps': int(opt.iterations.numpy()), 'best_explicitly_restored': True}
 
 
-def train_branch(tf, proxy, branch, fit_x, fit_y, selection_x, selection_y, cfg, seed):
+def train_branch(tf, proxy, branch, fit_x, fit_y, selection_x, selection_y, cfg, seed, snapshot_callback=None):
     if branch not in cfg['branches']:
         raise ValueError('Unknown branch')
     gate = build_gate(tf, proxy, branch, cfg, len(fit_y)) if branch in ['task_full', 'global_gate'] else None
@@ -163,7 +163,7 @@ def train_branch(tf, proxy, branch, fit_x, fit_y, selection_x, selection_y, cfg,
     best = scores(predict(proxy, gate, selection_x), selection_y)['cross_entropy']
     best_proxy = proxy.get_weights(); best_gate = gate.weights() if gate else []
     best_epoch = 0; curves = [{'epoch': 0, 'selection_cross_entropy': best}]
-    rng = np.random.default_rng(seed+1000); digest = hashlib.sha256(); audit = None
+    rng = np.random.default_rng(seed+1000); digest = hashlib.sha256(); audit = None; snapshots = []
     for epoch in range(cfg['collaborative_epochs']):
         order = rng.permutation(len(fit_y)); digest.update(order.astype('<i8').tobytes())
         for start in range(0, len(order), cfg['batch_size']):
@@ -188,6 +188,14 @@ def train_branch(tf, proxy, branch, fit_x, fit_y, selection_x, selection_y, cfg,
         curves.append({'epoch': epoch+1, 'selection_cross_entropy': loss})
         if loss < best:
             best = loss; best_epoch = epoch+1; best_proxy = proxy.get_weights(); best_gate = gate.weights() if gate else []
+        if epoch+1 in cfg.get('snapshot_epochs', []):
+            record = {'epoch': epoch+1, 'best_epoch': best_epoch, 'best_selection_cross_entropy': best,
+                'last_selection_cross_entropy': loss, 'classifier_optimizer_steps': int(opt.iterations.numpy()),
+                'batch_order_prefix_sha256': digest.hexdigest(), 'best_proxy_sha256': weight_digest(best_proxy),
+                'best_head_sha256': weight_digest(best_gate)}
+            snapshots.append(record)
+            if snapshot_callback is not None:
+                snapshot_callback(record, best_proxy, best_gate, proxy.get_weights(), gate.weights() if gate else [])
         if (epoch+1) % 5 == 0:
             print(f'  seed={seed} {branch} epoch={epoch+1} selection CE={loss:.5f}', flush=True)
     proxy.set_weights(best_proxy)
@@ -206,5 +214,6 @@ def train_branch(tf, proxy, branch, fit_x, fit_y, selection_x, selection_y, cfg,
                   'head_parameters': 33 if branch == 'task_full' else 1 if branch == 'global_gate' else 0,
                   'selected_global_scale': float(tf.sigmoid(gate.logit).numpy()) if branch == 'global_gate' else None,
                   'curve': curves, 'best_epoch': best_epoch, 'best_selection_cross_entropy': best,
+                  'snapshots': snapshots,
                   'first_batch_audit': audit, 'coupled_checkpoint_restored': True,
                   'assessment_passed_to_training': False}

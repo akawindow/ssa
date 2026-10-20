@@ -57,6 +57,29 @@ class ClassificationChecks(unittest.TestCase):
             self.assertTrue(a['coupled_checkpoint_restored']); audits.append(a)
         self.assertEqual(len({a['batch_order_sha256'] for a in audits}), 1)
 
+    def test_longer_budget_exactly_preserves_short_run_prefix(self):
+        from ssa_task_srd.learning import tensorflow, weight_digest
+        from ssa_task_srd.classification import build_classifier, train_branch
+        tf = tensorflow(17); base = build_classifier(tf, 24); initial = base.get_weights()
+        rng = np.random.default_rng(17); x = rng.normal(size=(8, 24)).astype(np.float32)
+        y = np.array([0, 1]*4)
+        cfg = {'length': 24, 'collaborative_epochs': 2, 'batch_size': 2, 'learning_rate': .001,
+               'selector_bias': 0., 'selector_max_norm': .25, 'branches': ['raw_continue', 'global_gate', 'task_full']}
+        for branch in cfg['branches']:
+            inputs = np.stack([.7*x, .3*x], axis=1) if branch == 'task_full' else x
+            proxy = build_classifier(tf, 24); proxy.set_weights(initial)
+            _, short = train_branch(tf, proxy, branch, inputs[:6], y[:6], inputs[6:], y[6:], cfg, 17)
+            proxy = build_classifier(tf, 24); proxy.set_weights(initial); captures = []
+            def capture(record, bp, bg, lp, lg):
+                captures.append((record.copy(), weight_digest(bp), weight_digest(bg)))
+            extended = dict(cfg, collaborative_epochs=4, schedule_epochs=2, snapshot_epochs=[2, 4])
+            _, long = train_branch(tf, proxy, branch, inputs[:6], y[:6], inputs[6:], y[6:], extended, 17, capture)
+            self.assertEqual(captures[0][1], short['final_proxy_sha256'])
+            self.assertEqual(captures[0][2], short['final_head_sha256'])
+            self.assertEqual(captures[0][0]['batch_order_prefix_sha256'], short['batch_order_sha256'])
+            self.assertEqual(long['classifier_optimizer_steps'], 12)
+            self.assertLessEqual(long['best_selection_cross_entropy'], short['best_selection_cross_entropy'])
+
 
 if __name__ == '__main__':
     unittest.main()
