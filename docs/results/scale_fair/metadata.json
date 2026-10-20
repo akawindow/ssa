@@ -1,0 +1,17 @@
+{
+  "created_utc": "2026-10-20T08:15:56.215480+00:00",
+  "code_commit": "87aa8cf8eb604abb2062baae5a2b92e89a479db3",
+  "elapsed_seconds": 10.410426300000836,
+  "readout_representations": 26,
+  "new_neural_training": false,
+  "all_source_outputs_unchanged": true,
+  "interpretation": "Conditional readout calibration of already trained frozen representations, not nested validation of the whole learned preprocessing pipeline",
+  "known_limits": [
+    "Source representations were learned using all outer training labels, including this round's inner validation portions",
+    "Source neural checkpoints were selected with the existing outer validation set",
+    "Original series standardization and SSA used the existing outer-training setup, not refitted upstream per inner fold",
+    "All four task cases are reported to avoid picking only the previously best one",
+    "Three seeds reflect source neural training variation, not independent datasets",
+    "No clean-signal recovery or novel denoising claim"
+  ]
+}

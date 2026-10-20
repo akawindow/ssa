@@ -1,0 +1,57 @@
+{
+  "source_run": "runs/task_alignment_initial",
+  "source_config": "coarse_current_seed42/config.json",
+  "training_seeds": [
+    42,
+    43,
+    44
+  ],
+  "task_cases": [
+    "coarse_current",
+    "full_current",
+    "coarse_task_head",
+    "full_task_head"
+  ],
+  "fixed_inputs": [
+    "raw",
+    "ssa_7"
+  ],
+  "scalar_control": "Raw histories multiplied by the mean training retention of each source model; never chosen from forecast validation scores",
+  "normalization": "StandardScaler per historical lag; fit on the inner training prefix only for each fold, then on all 251 training histories for final readout. Never per-window normalize or normalize future targets.",
+  "alphas": [
+    0.0001,
+    0.001,
+    0.01,
+    0.1,
+    1,
+    10,
+    100,
+    1000,
+    10000,
+    100000,
+    1000000
+  ],
+  "inner_folds": {
+    "first_train_fraction": 0.4,
+    "n_splits": 3,
+    "scheme": "Expanding chronological prefixes; contiguous future validation blocks; train target end must be at or before first inner validation origin"
+  },
+  "selection": "Lowest pooled inner-fold pointwise MSE; scores tied within max(1e-12, 1e-10*abs(minimum)) choose larger alpha. No outer-validation selection or adaptive grid expansion.",
+  "ridge_solver": "svd",
+  "numerical_controls": "Check final SVD readout against float64 Cholesky; standardized scalar controls should reproduce raw input transforms, selected alpha and outer predictions",
+  "fixed_alpha_diagnostic": 1.0,
+  "outer_baseline": "Yesterday same time, raw unprocessed history; no fitting",
+  "evaluation": "Existing 54 validation windows only, same raw future targets; no test windows",
+  "neural_retraining": false,
+  "artificial_corruption": false,
+  "repair": false,
+  "interpretation": "Conditional readout calibration of already trained frozen representations, not nested validation of the whole learned preprocessing pipeline",
+  "known_limits": [
+    "Source representations were learned using all outer training labels, including this round's inner validation portions",
+    "Source neural checkpoints were selected with the existing outer validation set",
+    "Original series standardization and SSA used the existing outer-training setup, not refitted upstream per inner fold",
+    "All four task cases are reported to avoid picking only the previously best one",
+    "Three seeds reflect source neural training variation, not independent datasets",
+    "No clean-signal recovery or novel denoising claim"
+  ]
+}
