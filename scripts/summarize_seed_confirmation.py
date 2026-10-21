@@ -89,7 +89,7 @@ def main():
         print('Verified best/last replication models seed', seed, flush=True)
     new = pd.DataFrame(rows); new.to_csv(out/'new_metrics.csv', index=False)
     old = pd.read_csv(root/cfg['reference_raw_run']/'metrics.csv')
-    old = old[old.branch.isin(['raw_continue', 'task_full'])].rename(columns={'branch': 'variant'})
+    old = old[old.branch.isin(['raw_pretrained', 'raw_continue', 'task_full'])].rename(columns={'branch': 'variant'})
     old.loc[old.variant == 'task_full', 'variant'] = 'task_unnormalized'
     oldnorm = pd.read_csv(root/cfg['reference_normalized_run']/'metrics.csv')
     oldnorm = oldnorm[oldnorm.branch == 'task_full'].rename(columns={'branch': 'variant'})
