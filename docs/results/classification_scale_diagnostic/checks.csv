@@ -1,0 +1,10 @@
+seed,role,task_predictions_reproduced,projection_orthogonal,projection_minimum_checked
+42,fit,True,True,True
+42,selection,True,True,True
+42,assessment,True,True,True
+43,fit,True,True,True
+43,selection,True,True,True
+43,assessment,True,True,True
+44,fit,True,True,True
+44,selection,True,True,True
+44,assessment,True,True,True

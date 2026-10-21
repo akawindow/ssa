@@ -1,0 +1,32 @@
+{
+  "source_run": "runs/classification_40_initial",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "roles": [
+    "fit",
+    "selection",
+    "assessment"
+  ],
+  "checkpoint": "task_full selection-CE best within 40 collaborative epochs; no re-selection",
+  "variants": [
+    "task_reconstruction",
+    "closest_sample_scale"
+  ],
+  "projection": "a = dot(raw, reconstruction) / dot(raw, raw); scaled = a * raw; float64 projection then float32 classifier input; zero raw maps to zero",
+  "scale_clipping": false,
+  "classifier": "same frozen task_full classifier for both variants; training=False",
+  "new_training": false,
+  "primary": "assessment paired accuracy difference task_reconstruction minus closest_sample_scale",
+  "secondary": [
+    "cross_entropy",
+    "macro_f1",
+    "balanced_accuracy",
+    "prediction disagreement and correct/wrong transitions"
+  ],
+  "source_raw_continue": "reference score only: separately adapted classifier, not the within-model diagnostic",
+  "official_test_read": false,
+  "scope": "Posthoc substitution diagnostic on explored FordA TRAIN splits. Scalar uses current sample and its learned reconstruction, no labels; it still depends on the full SSA/selector and is not an independent deployable cheap baseline. Input substitution may shift distribution. No physical denoising, statistical significance, or cross-dataset claim. No tuning from scores."
+}

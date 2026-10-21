@@ -1,0 +1,11 @@
+{
+  "frozen_models": 3,
+  "split_pairs": 9,
+  "split_scores": 18,
+  "all_source_predictions_reproduced": true,
+  "all_model_weights_unchanged": true,
+  "source_files_checked": 164,
+  "all_source_files_unchanged": true,
+  "official_test_read": false,
+  "new_training": false
+}
