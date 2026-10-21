@@ -1,0 +1,7 @@
+{
+  "source": "runs\\classification_initial",
+  "files_checked": 88,
+  "all_original_files_unchanged": true,
+  "pretraining_reused": true,
+  "first_ten_epoch_prefix_exactly_checked_for_all_branches": true
+}

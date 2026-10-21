@@ -1,0 +1,61 @@
+{
+  "dataset": "FordA",
+  "train_url": "https://raw.githubusercontent.com/hfawaz/cd-diagram/master/FordA/FordA_TRAIN.tsv",
+  "train_sha256": "f80f6df3336194b2d52bb29fc41c980e7f0a809c80a5c5b79121d74622e0a7de",
+  "description_url": "https://timeseriesclassification.com/description.php?Dataset=FordA",
+  "reference_example": "https://keras.io/examples/timeseries/timeseries_classification_from_scratch/",
+  "official_test_downloaded": false,
+  "split_seed": 20261020,
+  "fit_fraction": 0.7,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "length": 500,
+  "embedding": 32,
+  "energy_threshold": 0.9,
+  "batch_size": 64,
+  "pretrain_epochs": 40,
+  "pretrain_patience": 10,
+  "collaborative_epochs": 60,
+  "learning_rate": 0.001,
+  "selector_bias": 0.0,
+  "selector_max_norm": 0.25,
+  "branches": [
+    "raw_continue",
+    "half_continue",
+    "ssa_energy_continue",
+    "global_gate",
+    "task_full"
+  ],
+  "backbone": "Conv1D(8,7,stride2,ELU)-Conv1D(32,5,stride2,ELU)-GAP32-Dense2 logits; no BN/dropout",
+  "checkpoint": "Minimum selection sparse cross-entropy, including epoch zero; joint restore of classifier and gate",
+  "primary_metric": "accuracy; paired task-minus-raw differences in percentage points",
+  "secondary_metrics": [
+    "balanced_accuracy",
+    "macro_f1",
+    "cross_entropy",
+    "confusion_matrix"
+  ],
+  "scope": "User-requested matched 50/60 epoch extension on explored FordA internal assessment; official TEST unopened.",
+  "fixed_ssa_rule": "Per-sample smallest prefix explaining >=90% trajectory singular-value squared energy. No labels or held-out tuning.",
+  "scale": "One scalar mean/std fitted on fit input values only; applied to all raw samples before SSA. No separate output normalization.",
+  "budget": "Same 3 pretrained models and five branches. 2400 classifier steps each. Preserve original first 40 epochs exactly; original 10-epoch LR schedule, then floor 0.0009.",
+  "stop_rule": "Execute all 60 epochs; report selection-best at 10/40/50/60 and actual terminal states 40/50/60. Do not tune budgets from assessment.",
+  "schedule_epochs": 10,
+  "snapshot_epochs": [
+    10,
+    40,
+    50,
+    60
+  ],
+  "pretrained_from": "runs/classification_initial",
+  "assessment_previously_explored": true,
+  "terminal_epochs": [
+    40,
+    50,
+    60
+  ],
+  "prefix_from": "runs/classification_40_initial"
+}
