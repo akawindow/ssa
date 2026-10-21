@@ -1,0 +1,70 @@
+{
+  "dataset": "FordA",
+  "train_url": "https://raw.githubusercontent.com/hfawaz/cd-diagram/master/FordA/FordA_TRAIN.tsv",
+  "train_sha256": "f80f6df3336194b2d52bb29fc41c980e7f0a809c80a5c5b79121d74622e0a7de",
+  "description_url": "https://timeseriesclassification.com/description.php?Dataset=FordA",
+  "reference_example": "https://keras.io/examples/timeseries/timeseries_classification_from_scratch/",
+  "official_test_downloaded": false,
+  "split_seed": 20261020,
+  "fit_fraction": 0.7,
+  "seeds": [
+    45,
+    46,
+    47
+  ],
+  "length": 500,
+  "embedding": 32,
+  "energy_threshold": 0.9,
+  "batch_size": 64,
+  "pretrain_epochs": 40,
+  "pretrain_patience": 10,
+  "collaborative_epochs": 60,
+  "learning_rate": 0.001,
+  "selector_bias": 0.0,
+  "selector_max_norm": 0.25,
+  "branches": [
+    "raw_continue",
+    "half_continue",
+    "ssa_energy_continue",
+    "global_gate",
+    "task_full"
+  ],
+  "backbone": "Conv1D(8,7,stride2,ELU)-Conv1D(32,5,stride2,ELU)-GAP32-Dense2 logits; no BN/dropout",
+  "checkpoint": "Minimum selection sparse cross-entropy, including epoch zero; joint restore of classifier and gate",
+  "primary_metric": "accuracy; paired task-minus-raw differences in percentage points",
+  "secondary_metrics": [
+    "balanced_accuracy",
+    "macro_f1",
+    "cross_entropy",
+    "confusion_matrix"
+  ],
+  "scope": "Prespecified additional training seeds45/46/47 on the same explored FordA TRAIN split; training randomness replication, not an independent dataset confirmation.",
+  "fixed_ssa_rule": "Per-sample smallest prefix explaining >=90% trajectory singular-value squared energy. No labels or held-out tuning.",
+  "scale": "One scalar mean/std fitted on fit input values only; applied to all raw samples before SSA. No separate output normalization.",
+  "budget": "Each seed has one fresh common pretraining (max40epochs, original patience10), then three matched60epoch branches with2400classifierupdates; taskheads have2400extra updates. Same batch order and initialization per seed.",
+  "stop_rule": "Finish all3newseeds and3variants before assessment scoring; report new3 separately and all6. No changes to RMSfloor0.001, architecture, split, LR or epoch budget; official TEST unopened.",
+  "schedule_epochs": 10,
+  "snapshot_epochs": [
+    60
+  ],
+  "assessment_previously_explored": true,
+  "terminal_epochs": [
+    60
+  ],
+  "selector_input_normalization": "component_rms",
+  "selector_rms_floor": 0.001,
+  "normalization_rule": "Each selector component divided by max(RMS,0.001), no centering. Floor fixed engineering choice in standardized raw units; limits amplification to1000; numerical residual stays near zero. Does not normalize reconstruction or downstream classifier input.",
+  "variants": [
+    "raw_continue",
+    "task_unnormalized",
+    "task_normalized"
+  ],
+  "reference_raw_run": "runs/classification_60_initial",
+  "reference_normalized_run": "runs/selector_rms_initial",
+  "reference_seeds": [
+    42,
+    43,
+    44
+  ],
+  "comparison": "New45/46/47 paired task_normalized-minus-raw primary; normalized-minus-unnormalized secondary. Old42/43/44 retained in all6summary, never overwrite old results."
+}
