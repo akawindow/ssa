@@ -23,6 +23,8 @@ def main():
     run = root/args.run; out = root/args.out; out.mkdir(parents=True, exist_ok=False)
     cfg = json.loads((run/'protocol.json').read_text()); audit = json.loads((run/'data_audit.json').read_text())
     source = root/cfg['pretrained_from']
+    final_epoch = cfg['collaborative_epochs']
+    terminal_epochs = cfg.get('terminal_epochs', [final_epoch])
     fingerprints = {str(p.relative_to(run)): hashlib.sha256(p.read_bytes()).hexdigest() for p in run.rglob('*') if p.is_file()}
     data = np.loadtxt(root/'data/forda/FordA_TRAIN.tsv', delimiter='\t')
     labels = (data[:, 0] == 1).astype(np.int64)
@@ -33,11 +35,12 @@ def main():
     for seed in cfg['seeds']:
         for branch in cfg['branches']:
             folder = run/f'{branch}_seed{seed}'; training = json.loads((folder/'training.json').read_text())
-            assert training['classifier_optimizer_steps'] == 1600 and len(training['curve']) == 41
+            steps = final_epoch*int(np.ceil(audit['counts']['fit']/cfg['batch_size']))
+            assert training['classifier_optimizer_steps'] == steps and len(training['curve']) == final_epoch+1
             assert training['snapshots'][0]['old_ten_epoch_best_exactly_reproduced']
             tf.keras.backend.clear_session(); proxy = build_classifier(tf, cfg['length'])
             gate = build_gate(tf, proxy, branch, cfg, audit['counts']['fit']) if branch in ['task_full', 'global_gate'] else None
-            snapshots = [(epoch, 'best') for epoch in cfg['snapshot_epochs']]+[(40, 'last')]
+            snapshots = [(epoch, 'best') for epoch in cfg['snapshot_epochs']]+[(e, 'last') for e in terminal_epochs]
             for budget, kind in snapshots:
                 with np.load(folder/f'epoch{budget}_{kind}.npz') as z:
                     pw = [z[f'proxy_w{i}'] for i in range(sum(k.startswith('proxy_') for k in z.files))]
@@ -50,7 +53,7 @@ def main():
                 if kind == 'best':
                     assert weight_digest(proxy.get_weights()) == record['best_proxy_sha256']
                     assert weight_digest(gate.weights() if gate else []) == record['best_head_sha256']
-                roles = ['selection', 'assessment']+(['fit'] if budget == 40 else [])
+                roles = ['selection', 'assessment']+(['fit'] if budget == final_epoch else [])
                 for role in roles:
                     ix = np.array(audit['indices'][role]); logits = predict(proxy, gate, inputs[branch][ix])
                     sc = scores(logits, labels[ix]); cm = sc.pop('confusion_matrix')
@@ -62,9 +65,13 @@ def main():
                     if budget == 10 and kind == 'best':
                         saved = np.load(source/f'{branch}_seed{seed}/logits.npz')[role]
                         np.testing.assert_allclose(logits, saved, atol=2e-6, rtol=2e-6)
-                    if budget == 40 and kind == 'best':
+                    if budget == final_epoch and kind == 'best':
                         saved = np.load(folder/'logits.npz')[role]
                         np.testing.assert_allclose(logits, saved, atol=2e-6, rtol=2e-6)
+                    if cfg.get('prefix_from') and budget == 40 and kind == 'best':
+                        saved = np.load(root/cfg['prefix_from']/f'{branch}_seed{seed}/logits.npz')[role]
+                        np.testing.assert_allclose(logits, saved, atol=2e-6, rtol=2e-6)
+                        assert record['old_prefix_best_and_terminal_exactly_reproduced']
                 checks.append(dict(seed=seed, branch=branch, budget=budget, checkpoint=kind,
                     selection_loss_matches=True, selected_weights_reloaded=True,
                     ten_epoch_predictions_match_old_run=True if budget == 10 else None))
@@ -84,7 +91,8 @@ def main():
     assert all(hashlib.sha256((run/p).read_bytes()).hexdigest() == h for p, h in fingerprints.items())
     (out/'verification.json').write_text(json.dumps({'checkpoint_states': len(checks),
         'split_scores_verified': len(f), 'all_15_old_ten_epoch_prefixes_reproduced': True,
-        'all_40_epoch_best_predictions_match_primary_run': True, 'source_run_files_unchanged': True,
+        'final_budget': final_epoch, 'all_final_best_predictions_match_primary_run': True,
+        'old_40_epoch_predictions_reproduced': bool(cfg.get('prefix_from')), 'source_run_files_unchanged': True,
         'new_neural_training': False, 'official_test_read': False}, indent=2), encoding='utf-8')
     plot(out)
     print(summary.loc['assessment'].to_string(), flush=True)
@@ -103,7 +111,7 @@ def plot(out):
             s = a.groupby('budget')[metric].agg(['mean', 'std'])
             scale = 100 if metric == 'accuracy' else 1
             ax.errorbar(s.index, s['mean']*scale, yerr=s['std']*scale, marker='o', capsize=3, label=label)
-            ax.set_xticks([10, 20, 30, 40]); ax.set_xlabel('Executed collaborative training epochs')
+            ax.set_xticks(sorted(f.budget.unique())); ax.set_xlabel('Executed collaborative training epochs')
     axes[0].set_ylabel('Selection cross-entropy (lower is better)')
     axes[1].set_ylabel('Explored assessment accuracy (%)')
     axes[0].set_title('Checkpoint selection uses this split only'); axes[0].legend(fontsize=8)

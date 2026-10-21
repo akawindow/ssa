@@ -31,6 +31,15 @@ def main():
     cfg = json.loads((root/args.protocol).read_text(encoding='utf-8'))
     pretrained_run = root/cfg['pretrained_from'] if cfg.get('pretrained_from') else None
     original_hashes = {}
+    prefix_run = root/cfg['prefix_from'] if cfg.get('prefix_from') else None
+    prefix_hashes = {}
+    if prefix_run is not None:
+        prefix_hashes = {str(p.relative_to(prefix_run)): hashlib.sha256(p.read_bytes()).hexdigest()
+                         for p in prefix_run.rglob('*') if p.is_file()}
+        prefix_cfg = json.loads((prefix_run/'protocol.json').read_text())
+        for key, value in prefix_cfg.items():
+            if key not in ['collaborative_epochs', 'budget', 'stop_rule', 'scope', 'snapshot_epochs']:
+                assert cfg[key] == value, f'Unexpected prefix protocol change: {key}'
     if pretrained_run is not None:
         original_hashes = {str(p.relative_to(pretrained_run)): hashlib.sha256(p.read_bytes()).hexdigest()
                            for p in pretrained_run.rglob('*') if p.is_file()}
@@ -129,10 +138,23 @@ def main():
                 payload = {f'proxy_w{i}': v for i, v in enumerate(best_proxy)}
                 payload.update({f'gate_w{i}': v for i, v in enumerate(best_gate)})
                 np.savez_compressed(folder/f'epoch{record["epoch"]}_best.npz', **payload)
-                if record['epoch'] == cfg['collaborative_epochs']:
+                if record['epoch'] in cfg.get('terminal_epochs', [cfg['collaborative_epochs']]):
                     payload = {f'proxy_w{i}': v for i, v in enumerate(last_proxy)}
                     payload.update({f'gate_w{i}': v for i, v in enumerate(last_gate)})
                     np.savez_compressed(folder/f'epoch{record["epoch"]}_last.npz', **payload)
+                if prefix_run is not None and record['epoch'] == prefix_cfg['collaborative_epochs']:
+                    old_folder = prefix_run/f'{branch}_seed{seed}'
+                    old = json.loads((old_folder/'training.json').read_text())
+                    for new_key, old_key in [('best_proxy_sha256', 'final_proxy_sha256'),
+                        ('best_head_sha256', 'final_head_sha256'), ('batch_order_prefix_sha256', 'batch_order_sha256')]:
+                        assert record[new_key] == old[old_key], f'Prefix mismatch: {branch} {seed}'
+                    np.testing.assert_allclose(record['best_selection_cross_entropy'], old['best_selection_cross_entropy'], atol=1e-10)
+                    with np.load(old_folder/f'epoch{record["epoch"]}_last.npz') as z:
+                        for i, w in enumerate(last_proxy):
+                            np.testing.assert_array_equal(w, z[f'proxy_w{i}'])
+                        for i, w in enumerate(last_gate):
+                            np.testing.assert_array_equal(w, z[f'gate_w{i}'])
+                    record['old_prefix_best_and_terminal_exactly_reproduced'] = True
                 if pretrained_run is not None and record['epoch'] == source_cfg['collaborative_epochs']:
                     old = json.loads((pretrained_run/f'{branch}_seed{seed}'/'training.json').read_text())
                     for new_key, old_key in [('best_proxy_sha256', 'final_proxy_sha256'), ('best_head_sha256', 'final_head_sha256'),
@@ -220,6 +242,11 @@ def main():
         write_json(out/'source_run_unchanged.json', {'source': str(pretrained_run.relative_to(root)),
             'files_checked': len(original_hashes), 'all_original_files_unchanged': True,
             'pretraining_reused': True, 'first_ten_epoch_prefix_exactly_checked_for_all_branches': True})
+    if prefix_run is not None:
+        assert all(hashlib.sha256((prefix_run/p).read_bytes()).hexdigest() == h for p, h in prefix_hashes.items())
+        write_json(out/'prefix_run_unchanged.json', {'source': str(prefix_run.relative_to(root)),
+            'files_checked': len(prefix_hashes), 'all_original_files_unchanged': True,
+            'prefix_best_and_terminal_exactly_checked_for_all_branches': True})
     print(summary.loc['assessment'].to_string(), flush=True)
     print('Classification pilot finished; official TEST remains unopened.', flush=True)
 
