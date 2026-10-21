@@ -107,7 +107,9 @@ def main():
             checks.append(dict(seed=seed, role=role, task_predictions_reproduced=True,
                 projection_orthogonal=True, projection_minimum_checked=True))
         assert weight_digest(proxy.get_weights()) == proxy_before
-        assert weight_digest(gate.weights()) == head_before
+        # Gate.weights() uses trainable_variables, which is empty after freezing.
+        # Inspect all actual Dense weights instead of the trainability inventory.
+        assert weight_digest(gate.head.get_weights()) == head_before
         np.savez_compressed(out/f'predictions_seed{seed}.npz', **arrays)
         print('Verified frozen substitutions seed', seed, flush=True)
     assert all(digest(run/p) == h for p, h in fingerprints.items())
