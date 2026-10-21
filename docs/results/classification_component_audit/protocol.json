@@ -1,0 +1,16 @@
+{
+  "source_run": "runs/classification_60_initial",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "checkpoint": "Existing selection-CE best within 60 epochs; no reselection",
+  "components": "32 SSA elementary components plus numerical residual; weights describe all33; information probes only first32 and raw input",
+  "weight_diagnostics": "Retention by rank, across-component spread within sample, bias-only sigmoid, kernel norm and feature contribution to gate logits; component RMS not additive energy share",
+  "probes": "Frozen final task encoder; independent StandardScaler + LogisticRegression C=1 solver=lbfgs max_iter=2000 for each of32 components and raw input. Scaler and probe fit on fit split only. No hyperparameter selection. 99 small linear classifiers, no new CNN/selector training.",
+  "correlation": "Per-seed Spearman correlation across 32 ranks: fit mean retention vs assessment probe accuracy, and retention vs fit RMS. Descriptive, not an independent causal/significance test.",
+  "mechanism_audit": "Existing actual optimizer step counts/first-batch phase isolation and complete initial-to-selected encoder/head changes. Recompute nonzero selector CE gradient and verify no model mutation, without optimizer updates.",
+  "official_test_read": false,
+  "scope": "Posthoc explored TRAIN splits. Probes measure linear class information in this learned encoder, not intrinsic signal information or physical noise. Separate rank components can be paired/interacting; lone-component score cannot establish deletion safety. No comparison of these probes with original end-to-end CNN as equal architectures. No new backbone, loss, decomposition or budget tuning."
+}

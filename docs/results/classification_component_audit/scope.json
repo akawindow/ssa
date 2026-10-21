@@ -1,0 +1,6 @@
+{
+  "posthoc": true,
+  "reason": "Near-tied weak-component weights make rank correlations sensitive to float32 reduction order. Recompute float64 means and round to 1e-4; preserve original raw correlations.",
+  "zero_input": "Frozen encoder+head on zero component; no labels or training.",
+  "primary_scores_unchanged": true
+}

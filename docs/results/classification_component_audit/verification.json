@@ -1,0 +1,14 @@
+{
+  "source_files_checked": 195,
+  "source_files_unchanged": true,
+  "original_task_predictions_reproduced": true,
+  "all_model_weights_unchanged": true,
+  "actual_phase_audits_passed": true,
+  "nonzero_head_ce_gradients": true,
+  "linear_probes": 99,
+  "linear_probe_split_scores": 297,
+  "new_backbone_training": false,
+  "official_test_read": false,
+  "elapsed_seconds": 25.745775100000174,
+  "source_commit": "024cd399e208adf13218f73aacb5a9a3fb5d97db"
+}
