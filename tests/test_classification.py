@@ -57,6 +57,41 @@ class ClassificationChecks(unittest.TestCase):
             self.assertTrue(a['coupled_checkpoint_restored']); audits.append(a)
         self.assertEqual(len({a['batch_order_sha256'] for a in audits}), 1)
 
+    def test_selector_normalization_preserves_reconstruction_amplitudes_and_zeros(self):
+        from ssa_task_srd.learning import tensorflow
+        from ssa_task_srd.classification import build_classifier, build_gate
+        tf = tensorflow(21); proxy = build_classifier(tf, 24)
+        cfg = dict(length=24, collaborative_epochs=2, batch_size=2, learning_rate=.001,
+                   selector_bias=0., selector_max_norm=.25,
+                   selector_input_normalization='component_rms', selector_rms_floor=.001)
+        gate = build_gate(tf, proxy, 'task_full', cfg, 6)
+        rng = np.random.default_rng(21)
+        c = rng.normal(size=(2, 3, 24)).astype(np.float32)
+        _, w = gate.reconstruct(c)
+        scaled = c*np.array([.1, 2., 10.], np.float32)[None, :, None]
+        reconstructed, ws = gate.reconstruct(scaled)
+        np.testing.assert_allclose(w, ws, atol=1e-7)
+        np.testing.assert_allclose(reconstructed, np.sum(scaled*ws.numpy(), axis=1), atol=1e-6)
+        z, wz = gate.reconstruct(np.zeros_like(c))
+        self.assertTrue(np.isfinite(wz).all()); np.testing.assert_array_equal(z, 0.)
+        gate.restore([np.zeros((32, 1), np.float32), np.zeros(1, np.float32)])
+        rebuilt, _ = gate.reconstruct(scaled)
+        np.testing.assert_allclose(rebuilt, .5*scaled.sum(axis=1), atol=1e-6)
+
+    def test_selector_normalization_default_preserves_legacy_behavior(self):
+        from ssa_task_srd.learning import tensorflow
+        from ssa_task_srd.classification import build_classifier, build_gate
+        tf = tensorflow(22); proxy = build_classifier(tf, 24)
+        cfg = dict(length=24, collaborative_epochs=2, batch_size=2, learning_rate=.001,
+                   selector_bias=0., selector_max_norm=.25)
+        gate = build_gate(tf, proxy, 'task_full', cfg, 6)
+        x = np.random.default_rng(22).normal(size=(2, 3, 24)).astype(np.float32)
+        rebuilt, w = gate.reconstruct(x)
+        f = proxy.layers[0](x.reshape(-1, 24), training=False)
+        expected = gate.head(f, training=False).numpy().reshape(2, 3, 1)
+        np.testing.assert_array_equal(w, expected)
+        np.testing.assert_array_equal(rebuilt, np.sum(x*expected, axis=1))
+
     def test_longer_budget_exactly_preserves_short_run_prefix(self):
         from ssa_task_srd.learning import tensorflow, weight_digest
         from ssa_task_srd.classification import build_classifier, train_branch

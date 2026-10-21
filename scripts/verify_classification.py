@@ -19,6 +19,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--run', required=True)
     parser.add_argument('--out', required=True)
+    parser.add_argument('--reference-run', default=None)
     args = parser.parse_args(); root = Path(__file__).resolve().parents[1]
     run = root/args.run; out = root/args.out; out.mkdir(parents=True, exist_ok=False)
     cfg = json.loads((run/'protocol.json').read_text()); audit = json.loads((run/'data_audit.json').read_text())
@@ -73,7 +74,8 @@ def main():
         print('Verified', branch, seed, flush=True)
     ix = np.array(audit['indices']['assessment'])
     for seed in cfg['seeds']:
-        raw = np.load(run/f'raw_continue_seed{seed}/logits.npz')['assessment'].argmax(axis=1)
+        reference = root/args.reference_run if args.reference_run else run
+        raw = np.load(reference/f'raw_continue_seed{seed}/logits.npz')['assessment'].argmax(axis=1)
         task = np.load(run/f'task_full_seed{seed}/logits.npz')['assessment'].argmax(axis=1)
         raw_ok = raw == labels[ix]; task_ok = task == labels[ix]
         paired.append(dict(seed=seed, n=len(ix), raw_correct=int(raw_ok.sum()), task_correct=int(task_ok.sum()),

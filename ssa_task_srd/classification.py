@@ -103,7 +103,11 @@ def build_gate(tf, proxy, branch, cfg, n):
                 w = tf.sigmoid(self.logit)
                 return x*w, w
             shape = tf.shape(x)
-            features = proxy.layers[0](tf.reshape(x, [-1, cfg['length']]), training=False)
+            selector_input = x
+            if cfg.get('selector_input_normalization', 'none') == 'component_rms':
+                rms = tf.sqrt(tf.reduce_mean(tf.square(x), axis=-1, keepdims=True))
+                selector_input = x/tf.maximum(rms, tf.cast(cfg['selector_rms_floor'], x.dtype))
+            features = proxy.layers[0](tf.reshape(selector_input, [-1, cfg['length']]), training=False)
             w = tf.reshape(self.head(features, training=False), [shape[0], shape[1], 1])
             return tf.reduce_sum(x*w, axis=1), w
 
