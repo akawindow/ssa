@@ -1,0 +1,9 @@
+{
+  "checkpoint_states": 75,
+  "split_scores_verified": 180,
+  "all_15_old_ten_epoch_prefixes_reproduced": true,
+  "all_40_epoch_best_predictions_match_primary_run": true,
+  "source_run_files_unchanged": true,
+  "new_neural_training": false,
+  "official_test_read": false
+}
