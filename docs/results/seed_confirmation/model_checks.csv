@@ -1,0 +1,13 @@
+seed,variant,weight_hash_matches,selection_loss_matches
+45,raw_pretrained,True,True
+45,raw_continue,True,True
+45,task_unnormalized,True,True
+45,task_normalized,True,True
+46,raw_pretrained,True,True
+46,raw_continue,True,True
+46,task_unnormalized,True,True
+46,task_normalized,True,True
+47,raw_pretrained,True,True
+47,raw_continue,True,True
+47,task_unnormalized,True,True
+47,task_normalized,True,True

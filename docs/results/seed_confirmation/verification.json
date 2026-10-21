@@ -1,0 +1,12 @@
+{
+  "new_common_pretraining_models": 3,
+  "new_branches": 9,
+  "selected_models_reloaded": 12,
+  "split_scores": 54,
+  "all_training_completed_before_scoring": true,
+  "source_files_checked": 311,
+  "source_files_unchanged": true,
+  "all_selection_losses_and_weights_match": true,
+  "official_test_read": false,
+  "new_training_during_scoring": false
+}

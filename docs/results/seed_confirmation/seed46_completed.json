@@ -1,0 +1,13 @@
+{
+  "seed": 46,
+  "training_complete": true,
+  "common_pretrain_is_fresh": true,
+  "all_variants_complete": true,
+  "all_budgets_batches_initializations_match": true,
+  "assessment_scored": false,
+  "official_test_read": false,
+  "references_unchanged": true,
+  "reference_files_checked": 239,
+  "elapsed_seconds": 563.4010369999996,
+  "source_commit": "4a2b2f37045a3e506dfceb8650b20a70096dfd49"
+}

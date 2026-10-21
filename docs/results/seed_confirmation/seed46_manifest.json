@@ -1,0 +1,26 @@
+[
+  {
+    "seed": 46,
+    "variant": "raw_pretrained",
+    "folder": "raw_pretrained",
+    "core_branch": "raw_continue"
+  },
+  {
+    "seed": 46,
+    "variant": "raw_continue",
+    "folder": "raw_continue",
+    "core_branch": "raw_continue"
+  },
+  {
+    "seed": 46,
+    "variant": "task_unnormalized",
+    "folder": "task_unnormalized",
+    "core_branch": "task_full"
+  },
+  {
+    "seed": 46,
+    "variant": "task_normalized",
+    "folder": "task_normalized",
+    "core_branch": "task_full"
+  }
+]
