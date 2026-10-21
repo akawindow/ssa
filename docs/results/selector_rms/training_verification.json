@@ -1,0 +1,9 @@
+{
+  "source_files_checked": 195,
+  "source_files_unchanged": true,
+  "same_initialization_batches_steps": true,
+  "completed_new_models": 3,
+  "all_phase_audits_passed": true,
+  "assessment_not_used_for_training": true,
+  "official_test_read": false
+}

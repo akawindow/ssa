@@ -1,0 +1,17 @@
+[
+  {
+    "seed": 42,
+    "branch": "task_full",
+    "folder": "task_full_seed42"
+  },
+  {
+    "seed": 43,
+    "branch": "task_full",
+    "folder": "task_full_seed43"
+  },
+  {
+    "seed": 44,
+    "branch": "task_full",
+    "folder": "task_full_seed44"
+  }
+]

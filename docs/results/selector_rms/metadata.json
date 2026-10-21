@@ -1,0 +1,7 @@
+{
+  "source_commit": "8677eb575d766c05227d657ffa356e95bf2b6712",
+  "elapsed_seconds": 1470.2220940999996,
+  "source_control_commit": "bc73eaa31576a50fc037ec49e73f06f7c0672f6b",
+  "scope": "Single-factor selector-side component RMS normalization; original-amplitude reconstruction; explored TRAIN-only splits.",
+  "reused_controls": true
+}

@@ -1,0 +1,9 @@
+{
+  "states_checked": 18,
+  "split_scores": 36,
+  "all_selection_losses_match": true,
+  "final_best_predictions_match": true,
+  "source_files_unchanged": true,
+  "official_test_read": false,
+  "new_training": false
+}

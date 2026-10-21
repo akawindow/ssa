@@ -1,0 +1,10 @@
+seed,role,weights_reloaded,selection_loss_verified
+42,fit,True,True
+42,selection,True,True
+42,assessment,True,True
+43,fit,True,True
+43,selection,True,True
+43,assessment,True,True
+44,fit,True,True
+44,selection,True,True
+44,assessment,True,True

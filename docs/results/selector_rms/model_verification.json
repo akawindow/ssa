@@ -1,0 +1,9 @@
+{
+  "models": 3,
+  "split_predictions_checked": 9,
+  "original_run_files_unchanged": true,
+  "original_source_commit": "8677eb575d766c05227d657ffa356e95bf2b6712",
+  "official_test_read": false,
+  "new_neural_training": false,
+  "shape_geometry_is_posthoc": true
+}

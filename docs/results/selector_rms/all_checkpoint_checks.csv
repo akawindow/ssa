@@ -1,0 +1,10 @@
+branch,seed,role,max_abs_logit_difference,metrics_match
+task_full,42,fit,2.384185791015625e-07,True
+task_full,42,selection,2.384185791015625e-07,True
+task_full,42,assessment,0.0,True
+task_full,43,fit,1.1920928955078125e-07,True
+task_full,43,selection,1.1920928955078125e-07,True
+task_full,43,assessment,0.0,True
+task_full,44,fit,2.384185791015625e-07,True
+task_full,44,selection,2.384185791015625e-07,True
+task_full,44,assessment,4.76837158203125e-07,True
